@@ -1,0 +1,9 @@
+/* Resets to provide same base across all browsers */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
