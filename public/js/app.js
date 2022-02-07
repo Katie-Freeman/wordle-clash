@@ -8,7 +8,7 @@ let secretWord;
 let guessCount = 1;
 
 socket.on("connect", () => {
-    socket.emit("new-game", { gameMode: "practice", numLetters: 4 });
+    socket.emit("new-game", { gameMode: "practice", numLetters: 5 });
 });
 
 socket.on("secret-word", (data) => {
@@ -29,11 +29,11 @@ socket.on("guess-results", (data) => {
 })
 
 notWordGuessbtn.addEventListener("click", () => {
-    socket.emit("guess", { guessCount, guess: "aaaa" });
+    socket.emit("guess", { guessCount, guess: "aaaaa" });
 });
 
 incorrectGuessbtn.addEventListener("click", () => {
-    const guess = secretWord === "taco" ? "bead" : "taco";
+    const guess = secretWord === "level" ? "blade" : "level";
     socket.emit("guess", { guessCount, guess });
 });
 

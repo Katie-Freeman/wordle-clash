@@ -21,56 +21,66 @@ const registerWordleHandlers = (io, socket) => {
         return words[numLetters][randomIndex];
     };
 
+    const getMatchesInWord = (word, letter) => {
+        const matches = [...word.matchAll(letter)];
+        return matches.map(match => match.index);
+    }
 
-    // TO SOLVE: Duplicate letter in guess that appears once in answer
-    // With second placement being in correct position.
-    // EX: guess = level  || answer = bevel
-    // Current logic would produce [yellow, green, green, green, green]
-    // Correct result would be [black, green, green, green, green]
     const evaluateGuessSpecifics = (guess) => {
         letters = guess.split("");
-        let processedLetters = ''
-        const resMap = letters.map((letter, index) => {
-            let result;
-            // logic to verify duplicate letters in guess and secret word
-            // need to not mark the same letter as yellow twice if only one is present
-            if (processedLetters.includes(letter)) {
-                // split will produce one extra segment than the number of occurences of the splitter
-                const letterAppearance = socket.secretWord.split(letter) - 1;
-                const countSoFar = processedLetters.split(letter) - 1;
-                if (countSoFar < letterAppearance) {
-                    result = "yellow";
-                } else {
-                    result = "black";
-                }
-            } else {
-                if (letter === socket.secretWord[index]) {
-                    result =  "green";
-                } else if (socket.secretWord.includes(letter)) {
-                    result =  "yellow";
-                } else {
-                    result =  "black";
-                }
+        const results = new Array(socket.numLetters).fill('');
+        for (let i = 0; i < guess.length; i++) {
+            // if not blank, this was matched in an earlier iteration to check if duplicate
+            // letter was in correct position later within word
+            if (results[i]) {
+                continue;
             }
 
-            processedLetters += letter;
-            return result;
-        }, );
+            const letter = guess[i];
+            if (letter === socket.secretWord[i]) {
+                results[i] = 'green';
+            } else if (socket.secretWord.includes(letter)) {
+                // Need to properly account for duplicates of letter
+                // check number of times letter is in answer and in guess
+                const answerMatches = getMatchesInWord(socket.secretWord, letter);
+                const guessMatches = getMatchesInWord(guess, letter);
+                const linedUpMatches = answerMatches.filter(match => guessMatches.includes(match))
+                
+                // make duplicates later in iteration green if at proper index
+                linedUpMatches.forEach(matchIndex => {
+                    results[matchIndex] = 'green';
+                })
 
-        socket.emit("guess-results", { results: resMap });
+                // factor out indices and counts of lined up match,
+                // while remaining answers above 0, assign result[i] = "yellow", then "black"
+                let remainingAnswers = answerMatches.filter(match => !linedUpMatches.includes(match)).length;
+                const remainingGuessIndices = guessMatches.filter(match => !linedUpMatches.includes(match));
+                remainingGuessIndices.forEach(guessIndex => {
+                    if (remainingAnswers > 0) {
+                        remainingAnswers--;
+                        results[guessIndex] = "yellow";
+                    } else {
+                        results[guessIndex] = "black"
+                    }
+                })
+            } else {
+                results[i] = 'black'
+            }
+        }
+
+        socket.emit("guess-results", { results });
     };
 
     socket.on("new-game", (data) => {
-        console.log(data);
         // socketUser.gameMode = data.gameMode;
-        socket.numLetters = data.numLetters;
+        socket.numLetters = parseInt(data.numLetters);
         socket.secretWord = generateSecretWord(data.numLetters);
         socket.emit("secret-word", { word: socket.secretWord });
     });
 
     socket.on("guess", (data) => {
         const guess = data.guess.trim();
-        if (!words[socket.numLetters].includes(guess)) {
+        if (!words[socket.numLetters].includes(guess) || guess.length < socket.numLetters) {
             return socket.emit("invalid-guess");
         } else if (guess === socket.secretWord) {
             return socket.emit("correct-word");
