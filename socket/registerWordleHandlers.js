@@ -1,7 +1,10 @@
-const registerTournamentHandlers = require("./registerTournamentHandlers");
 const words = require("./words/words");
 
+const connectedUsers = [];
+const usersLookingForMatch = [];
+
 const registerWordleHandlers = (io, socket) => {
+    let socketUser;
 
     // session isn't attaching on test.html (maybe doesn't run through other middleware on static pages?)
     if (socket.request.session) {
@@ -11,7 +14,7 @@ const registerWordleHandlers = (io, socket) => {
                 name: socket.request.session.username,
             };
 
-            const { socketUser } = socket.request.session;
+            socketUser = socket.request.session.socketUser
         }
     }
 
