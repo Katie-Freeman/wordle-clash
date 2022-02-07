@@ -1,0 +1,13 @@
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+        {{^authenticated}}
+            <li class="nav-item">
+                <a class="nav-link" href="/index/login">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/index/register">Register</a>
+            </li>
+        {{/authenticated}}
+        </ul>
+    </div>
