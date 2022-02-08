@@ -8,11 +8,21 @@
 </head>
 <body>
             <h1>Creat Your account</h1>
-        <form id="register" method= 'POST' action= "/registerr">
+        <form id="register" method= 'POST' action= "/register">
+            <label>email :
             <input id="email" type="text" placeholder ="Email" name="email" required/>
+            </label>
+            <label>username :
             <input id="username" type="text" placeholder ="Username" name="username" required/>
-            <input id="password" type="text" placeholder ="password" name= "password" required />
-            <input id="password" type="text" placeholder ="password" name= "password" required />
+            </label>
+            <label>password :
+                <input name="password" id="password" type="password" onkeyup='check();' required />
+            </label>
+            <br>
+            <label>confirm password:
+                <input type="password" name= "confirmPassword" id="confirmPassword" onkeyup='check();' required />
+                <span id='message'></span>
+            </label>
             <button id= "save">Create Account</button>
         </form>
 
