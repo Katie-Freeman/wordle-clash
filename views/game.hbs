@@ -9,6 +9,26 @@
     <title>Game</title>
 </head>
 <body>
+    <div id="warning">
+    </div>
+    <div id="result">
+        <i>Secret Word:</i>
+        <h2 class="secret"></h2>
+
+        <h3 id="again">Play Again?</h3>
+        <label>Number of Letters</label>
+        <select id="numLettersSelect">
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+        </select>
+        <div class="result-buttons">
+            <button id="solo">Solo</button>
+            <button id="match">Match</button>
+        </div>
+    </div>
     <div id="gameContainer">
         <i id="hideCount">{{ boxes.length }}</i>
         <div id="guesses">
