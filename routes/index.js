@@ -4,5 +4,5 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.render("index");
 });
-// forcing dif
+
 module.exports = router;
