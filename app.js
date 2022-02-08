@@ -5,15 +5,14 @@ const io = require("socket.io")(http);
 const hbs = require("express-hbs");
 const userRoutes = require("./routes/user");
 const indexRoutes = require("./routes/index");
-const utilsRoutes = require("./routes/utils");
 const session = require("express-session");
 
 const sessionMiddleware = require("./middleware/sessionMiddleware");
 const registerWordleHandlers = require("./socket/registerWordleHandlers");
 const registerTournamentHandlers = require("./socket/registerTournamentHandlers");
 
-// const PORT = process.env.PORT || 8080;
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
+// const PORT = 3000;
 
 app.engine(
   "hbs",
