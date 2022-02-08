@@ -41,7 +41,7 @@ const registerWordleHandlers = (io, socket) => {
 
             const letter = guess[i];
             if (letter === socket.secretWord[i]) {
-                results[i] = 'green';
+                results[i] = 'in-place';
             } else if (socket.secretWord.includes(letter)) {
                 // Need to properly account for duplicates of letter
                 // check number of times letter is in answer and in guess
@@ -51,7 +51,7 @@ const registerWordleHandlers = (io, socket) => {
                 
                 // make duplicates later in iteration green if at proper index
                 linedUpMatches.forEach(matchIndex => {
-                    results[matchIndex] = 'green';
+                    results[matchIndex] = 'in-place';
                 })
 
                 // factor out indices and counts of lined up match,
@@ -61,13 +61,13 @@ const registerWordleHandlers = (io, socket) => {
                 remainingGuessIndices.forEach(guessIndex => {
                     if (remainingAnswers > 0) {
                         remainingAnswers--;
-                        results[guessIndex] = "yellow";
+                        results[guessIndex] = "out-of-place";
                     } else {
-                        results[guessIndex] = "black"
+                        results[guessIndex] = "not-in-word"
                     }
                 })
             } else {
-                results[i] = 'black'
+                results[i] = 'not-in-word'
             }
         }
 
@@ -77,8 +77,9 @@ const registerWordleHandlers = (io, socket) => {
     socket.on("new-game", (data) => {
         // socketUser.gameMode = data.gameMode;
         socket.numLetters = parseInt(data.numLetters);
-        socket.secretWord = generateSecretWord(data.numLetters);
-        socket.emit("secret-word", { word: socket.secretWord });
+        // socket.secretWord = generateSecretWord(data.numLetters);
+        socket.secretWord = "taco";
+        socket.emit("secret-word", { secret: 'Secret Word Ready'});
     });
 
     socket.on("guess", (data) => {

@@ -23,6 +23,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
 app.use(express.static("public"));
 
+app.get('/game', (req, res) => {
+    let letterCount = 4;
+    if (req.session && req.session.lastLetterCount) {
+        letterCount = req.session.lastLetterCount;
+    }
+
+    const letterBoxes = new Array(letterCount).fill('.');
+    res.render('game', {boxes: letterBoxes})
+})
+
 io.use((socket, next) => {
     // gives access to socket.request.session
     sessionMiddleware(socket.request, {}, next);
