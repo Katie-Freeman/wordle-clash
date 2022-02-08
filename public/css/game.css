@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@700&display=swap');
+
+#gameContainer, #guesses, .guess-row, #keyboard, .keyboard-row {
+    display: flex;
+}
+
+#warning {
+    background-color: white;
+    padding: 1em;
+    width: 184px;
+    text-align: center;
+    position: absolute;
+    top: 0em;
+    opacity: 0;
+    left: calc(50% - 92px);
+    border-radius: 20px;
+    
+}
+
+#warning.active {
+    transition: .2s ease-in;
+    top: 2em;
+    opacity: 1;
+    z-index: 1;
+}
+
+#result {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    row-gap: .6em;
+    padding: 1em;
+    width: 300px;
+    height: 300px;
+    text-align: center;
+    position: absolute;
+    top: 0em;
+    opacity: 0;
+    left: calc(50% - 150px);
+    border-radius: 30px;
+    box-shadow: 2px 2px 15px gold
+}
+
+#result.active {
+    transition: .2s ease-in;
+    top: 3em;
+    opacity: 1;
+    z-index: 1;
+}
+.secret {
+    font-family: 'Overpass Mono', monospace;
+    font-weight: 700;
+    margin: 0;
+}
+
+#again {
+    margin: auto 0 0;
+}
+
+#gameContainer {
+    flex-direction: column;
+    row-gap: 2em;
+    background-color: black;
+    max-width: 800px;
+    height: 100vh;
+    margin: 0 auto;
+    color: white;
+    font-family: 'Overpass Mono', monospace;
+    font-weight: 700;
+}
+
+#guesses {
+    flex-direction: column;
+    row-gap: .7em;
+    background-color: #222;
+    padding: 2em 1em 1em;
+}
+
+.guess-row {
+    justify-content: center;
+    column-gap: 4px;
+}
+
+.guess-row.active {
+    background-color: #555;
+}
+
+.guess-letter {
+    background-color: #222;
+    padding: .5em 1em;
+    width: 65px;
+    height: 56px;
+    margin: 0;
+    border: 1px solid #555;
+    transition: background-color .5s ease-in;
+}
+
+.flip {
+    animation-name: flip;
+    animation-duration: .5s;
+}
+
+@keyframes flip {
+    0% {
+        transform: scaleY(1);
+    }
+
+    50% {
+        transform: scaleY(0);
+    }
+
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+.shake {
+    animation-name: shake;
+    animation-duration: .1s;
+    animation-iteration-count: 5;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateY(-.2em);
+    }
+
+    0% {
+        transform: translateY(0);
+    }
+
+    75% {
+        transform: translateY(.2em);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+#keyboard {
+    background-color: #222;
+    flex-direction: column;
+    margin-top: auto;
+    padding: 1em;
+    row-gap: 8px;
+}
+
+.keyboard-row {
+    justify-content: center;
+    column-gap: 8px;
+}
+
+.key {
+    background-color: #555;
+    padding: .5em .5em .25em;
+    cursor: pointer;
+}
+
+.key:active {
+    background-color: #777;
+}
+
+.guess-letter, .key {
+    border-radius: 7px;
+}
+
+.correct {
+    background-color: rgb(2, 85, 2);
+}
+
+.wrong-placement {
+    background-color: rgb(155, 155, 6);
+}
+
+.not-in-word {
+    background-color: #333;
+}
+
+#hideCount {
+    display: none;
+}
+
+@media screen and (min-width: 550px) {
+    .key {
+        font-size: 1.3em;
+        padding: .7em .7em .5em;
+    }
+}

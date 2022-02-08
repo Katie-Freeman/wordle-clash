@@ -6,7 +6,6 @@ const usersLookingForMatch = [];
 const registerWordleHandlers = (io, socket) => {
     let socketUser;
 
-    // session isn't attaching on test.html (maybe doesn't run through other middleware on static pages?)
     if (socket.request.session) {
         if (!socket.request.session.socketUser) {
             socket.request.session.socketUser = {
@@ -18,6 +17,7 @@ const registerWordleHandlers = (io, socket) => {
         }
     }
 
+    console.log(socketUser)
     const generateSecretWord = (numLetters) => {
         const wordCount = words[numLetters].length;
         const randomIndex = Math.floor(Math.random() * wordCount);
@@ -29,7 +29,7 @@ const registerWordleHandlers = (io, socket) => {
         return matches.map(match => match.index);
     }
 
-    const evaluateGuessSpecifics = (guess) => {
+    const evaluateGuessSpecifics = (guess, count) => {
         letters = guess.split("");
         const results = new Array(socket.numLetters).fill('');
         for (let i = 0; i < guess.length; i++) {
@@ -41,7 +41,7 @@ const registerWordleHandlers = (io, socket) => {
 
             const letter = guess[i];
             if (letter === socket.secretWord[i]) {
-                results[i] = 'green';
+                results[i] = 'in-place';
             } else if (socket.secretWord.includes(letter)) {
                 // Need to properly account for duplicates of letter
                 // check number of times letter is in answer and in guess
@@ -51,7 +51,7 @@ const registerWordleHandlers = (io, socket) => {
                 
                 // make duplicates later in iteration green if at proper index
                 linedUpMatches.forEach(matchIndex => {
-                    results[matchIndex] = 'green';
+                    results[matchIndex] = 'in-place';
                 })
 
                 // factor out indices and counts of lined up match,
@@ -61,34 +61,54 @@ const registerWordleHandlers = (io, socket) => {
                 remainingGuessIndices.forEach(guessIndex => {
                     if (remainingAnswers > 0) {
                         remainingAnswers--;
-                        results[guessIndex] = "yellow";
+                        results[guessIndex] = "out-of-place";
                     } else {
-                        results[guessIndex] = "black"
+                        results[guessIndex] = "not-in-word"
                     }
                 })
             } else {
-                results[i] = 'black'
+                results[i] = 'not-in-word'
             }
         }
+        const socketData = { results };
+        if (count === 6) {
+            socketData.secretWord = socket.secretWord;
+        }
 
-        socket.emit("guess-results", { results });
+        socket.emit("guess-results", socketData);
     };
 
+    const handleWordGuessed = async() => {
+        // handle db calls
+        socket.emit("correct-word");
+    }
+
+    const startSoloGame = () => {
+        socket.secretWord = generateSecretWord(socket.numLetters);
+        socket.emit("secret-word", { secret: "Secret Word Ready" });
+    }
+
     socket.on("new-game", (data) => {
-        // socketUser.gameMode = data.gameMode;
+        socketUser.gameMode = data.gameMode;
         socket.numLetters = parseInt(data.numLetters);
-        socket.secretWord = generateSecretWord(data.numLetters);
-        socket.emit("secret-word", { word: socket.secretWord });
+        switch (socketUser.gameMode) {
+            case 'solo':
+                startSoloGame();
+                break;
+            default:
+                startSoloGame();
+        }
     });
 
     socket.on("guess", (data) => {
         const guess = data.guess.trim();
+        const guessCount = parseInt(data.count);
         if (!words[socket.numLetters].includes(guess) || guess.length < socket.numLetters) {
-            return socket.emit("invalid-guess");
+            socket.emit("invalid-guess");
         } else if (guess === socket.secretWord) {
-            return socket.emit("correct-word");
+            handleWordGuessed();
         } else {
-            evaluateGuessSpecifics(guess);
+            evaluateGuessSpecifics(guess, guessCount);
         }
     });
 };
