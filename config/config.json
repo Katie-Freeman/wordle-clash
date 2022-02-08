@@ -3,8 +3,8 @@
     "username": "votosklj",
     "password": "pM_H1GmzTryz_ESPMg89aiGLPQ-UT-_Z",
     "database": "votosklj",
-    "host": "postgres://votosklj:pM_H1GmzTryz_ESPMg89aiGLPQ-UT-_Z@castor.db.elephantsql.com/votosklj",
-    "dialect": "mysql"
+    "host": "castor.db.elephantsql.com",
+    "dialect": "postgres"
   },
   "test": {
     "username": "root",
@@ -14,10 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "votosklj",
+    "password": "pM_H1GmzTryz_ESPMg89aiGLPQ-UT-_Z",
+    "database": "votosklj",
+    "host": "castor.db.elephantsql.com",
+    "dialect": "postgres"
   }
 }
