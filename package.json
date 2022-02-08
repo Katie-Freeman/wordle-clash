@@ -1,7 +1,7 @@
 {
     "name": "wordle-clash",
     "version": "1.0.0",
-    "description": "",
+    "description": "word",
     "main": "app.js",
     "scripts": {
         "start": "node app.js",
