@@ -6,8 +6,8 @@ const letterCountMiddleware = (req, res, next) => {
     const letterBoxes = new Array(letterCount).fill(".");
     res.locals.boxes = letterBoxes;
 
-    if (req.session && req.session.username) {
-        res.locals.username = req.session.username;
+    if (req.session && req.session.user) {
+        res.locals.username = req.session.user.name;
     }
     next();
 };

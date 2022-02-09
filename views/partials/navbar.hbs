@@ -1,20 +1,18 @@
 <nav class="navbar navbar-default navbar-expand-lg navbar-light">
     <ul class="nav navbar-nav navbar-right">
         {{#if username}}
-            <li>
-                {{username}}
+            <li class="nav-item">
+                <a>{{username}}</a>
             </li>
-            <li>
+            <li class="nav-item">
                 <a href="/user/logout">Log Out</a>
             </li>
 
-        {{else}}
-
-		<ul class="nav navbar-nav navbar-right">			
-			<li>
+        {{else}}			
+			<li class="nav-item">
 				<a data-toggle="dropdown" class="dropdown-toggle" >Login</a>
 				<ul class="dropdown-menu form-wrapper">					
-					<li>
+					<li class="nav-item">
 						<form action="/user/login" method="POST">
 							<div class="form-group">
 								<input id="loginUsername" type="text" class="form-control" placeholder="Username" name="name" required="required">
@@ -27,18 +25,18 @@
 								<a href="#">Forgot Your password?</a>
 							</div> --}}
 						</form>
-						    {{#message}}
+						{{#if message}}
 							<div class="alert alert-danger" role="alert">
-							{{message}}
+								{{message}}
 							</div>
-							{{/message}}
+						{{/if}}
 					</li>
 				</ul>
 			</li>
-			<li>
+			<li class="nav-item">
 				<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle get-started-btn mt-1 mb-1">Sign up</a>
 				<ul class="dropdown-menu form-wrapper">					
-					<li>
+					<li class="nav-item">
 						<form action="/user/register" method="POST">
 							<p class="hint-text">Fill in this form to create your account!</p>
                             <div class="form-group">
@@ -58,6 +56,7 @@
 					</li>
 				</ul>
 			</li>
+			{{/if}}
 		</ul>
 	</div>
 </nav>                                                    
