@@ -5,6 +5,8 @@ const io = require("socket.io")(http);
 const hbs = require("express-hbs");
 const userRoutes = require("./routes/user");
 const indexRoutes = require("./routes/index");
+const profileRoutes = require("./routes/profile");
+const dbtestRoutes = require("./routes/dbtest"); //NOTE for testing
 
 const sessionMiddleware = require("./middleware/sessionMiddleware");
 
@@ -39,6 +41,8 @@ io.of("/tournaments").use((socket, next) => {
     sessionMiddleware(socket.request, {}, next);
 });
 
+app.use("/profile", profileRoutes);
+app.use("/dbtest", dbtestRoutes);
 app.use("/user", userRoutes);
 app.use("/", indexRoutes);
 app.use(express.static("public"));

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Document</title>
+        {{>header}}
+    </head>
+
+    <body>
+        <header>
+            {{>navbar}}
+        </header>
+        <div id="profileWrap">
+
+            <h2>Profile </h2>
+            <div id="infoWrap">
+                <p>name: <span id="infoName"> {{test.name}} </span> </p>
+                <p>email:<span id="infoEmail">{{test.email}} </span> </p>
+
+            </div>
+            <div id="tableContainer">
+                <table id="statsTable">
+                    <tr>
+                        <td></td>
+                        <td>all</td>
+                        <td>4w</td>
+                        <td>5w</td>
+                        <td>6w</td>
+                        <td>7w</td>
+                        <td>8w</td>
+                    </tr>
+                    <tr>
+                        <td>game played</td>
+                        <td>{{test.total.games}}</td>
+                        <td>7</td>
+                        <td>15</td>
+                        <td>6</td>
+                        <td>8</td>
+                        <td>9</td>
+                    </tr>
+                    <tr>
+                        <td>won</td>
+                        <td>{{test.total.won}}</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>loss</td>
+                        <td>{{test.total.loss}}</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>avrg attempts</td>
+                        <td>{{test.total.avrg}}</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="statGraph">
+                {{!-- js insert --}}
+            </div>
+        </div>
+
+
+
+
+
+        <footer>
+            {{>footer}}
+        </footer>
+    </body>
+
+</html>
