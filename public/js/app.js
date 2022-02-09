@@ -12,7 +12,7 @@ const keyboard = document.getElementById("keyboard");
 const reLetters = /[a-zA-Z]/;
 let guessCount = 0;
 let currentGuessString = "";
-let numLetters = parseInt(hideCount.innerHTML);
+let numLetters = parseInt(hideCount.content);
 let playing = true;
 
 let currentRow;
