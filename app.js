@@ -27,9 +27,9 @@ app.engine(
 );
 app.set("views", "./views");
 app.set("view engine", "hbs");
+app.use(sessionMiddleware);
 app.use(resLocalsMiddleware);
 app.use(express.urlencoded({ extended: true }));
-app.use(sessionMiddleware);
 
 io.of("/wordle").use((socket, next) => {
     // grants access to session within io handlers
