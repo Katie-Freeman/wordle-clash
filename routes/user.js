@@ -25,16 +25,14 @@ router.post("/login", async (req, res) => {
   if (user != null) {
     bcrypt.compare(password, user.password, (error, result) => {
       if (result) {
-        if (req.session) {
-          req.session.user = { userId: user.id };
-          res.redirect("/");
-        }
+        req.session.user = { userId: user.id };
+        res.redirect("/game");
       } else {
-        res.render("index", { message: "Incorrect Username or password" });
+        res.render("index", { message: "Incorrect password" });
       }
     });
   } else {
-    res.render("index", { message: "Incorrect username or password" });
+    res.render("index", { message: "Wrong Username" });
   }
 });
 
