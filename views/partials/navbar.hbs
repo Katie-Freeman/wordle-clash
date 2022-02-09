@@ -5,20 +5,26 @@
 
 		<ul class="nav navbar-nav navbar-right">			
 			<li>
-				<a data-toggle="dropdown" class="dropdown-toggle" href="#">Login</a>
+				<a data-toggle="dropdown" class="dropdown-toggle" >Login</a>
 				<ul class="dropdown-menu form-wrapper">					
 					<li>
+						<form action="/user/login" method="POST">
 							<div class="form-group">
-								<input id="loginUsername" type="text" class="form-control" placeholder="Username" required="required">
+								<input id="loginUsername" type="text" class="form-control" placeholder="Username" name="name" required="required">
 							</div>
 							<div class="form-group">
 								<input id="loginPassword" type="password" class="form-control" placeholder="Password" required="required">
 							</div>
 							<input type="submit" class="btn btn-primary btn-block" value="Login">
-							<div class="form-footer">
+							{{!-- <div class="form-footer">
 								<a href="#">Forgot Your password?</a>
-							</div>
+							</div> --}}
 						</form>
+						    {{#message}}
+							<div class="alert alert-danger" role="alert">
+							{{message}}
+							</div>
+							{{/message}}
 					</li>
 				</ul>
 			</li>
@@ -26,19 +32,19 @@
 				<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle get-started-btn mt-1 mb-1">Sign up</a>
 				<ul class="dropdown-menu form-wrapper">					
 					<li>
-						<form action="/examples/actions/confirmation.php" method="post">
+						<form action="/user/register" method="POST">
 							<p class="hint-text">Fill in this form to create your account!</p>
                             <div class="form-group">
 								<input id="registerEmail" type="text" class="form-control" placeholder="Email" name="email" required="required">
 							</div>
 							<div class="form-group">
-								<input id="registerUsername" type="text" class="form-control" placeholder="Username" name="username" required="required">
+								<input id="registerUsername" type="text" class="form-control" placeholder="Username" name="name" required="required">
 							</div>
 							<div class="form-group">
 								<input id="registerPassword" type="password" class="form-control" placeholder="Password" name="password" required="required" onkeyup='check();'>
 							</div>
 							<div class="form-group">
-								<input id="confirmPassword" type="password" class="form-control" name="password" placeholder="Confirm Password" required="required" onkeyup='check();'>
+								<input id="confirmPassword" type="password" class="form-control" name="confirmPassword" placeholder="Confirm Password" required="required" onkeyup='check();'>
 							</div>
 							<input id="submitBtn" type="submit" class="btn btn-primary btn-block" disabled value="Sign up">
 						</form>

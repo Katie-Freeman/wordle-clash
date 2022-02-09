@@ -11,7 +11,7 @@ const sessionMiddleware = require("./middleware/sessionMiddleware");
 const registerWordleHandlers = require("./socket/registerWordleHandlers");
 const registerTournamentHandlers = require("./socket/registerTournamentHandlers");
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 
 app.engine(
