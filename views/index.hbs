@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="stylesheet" href="/css/game.css">
     <title>Document</title>
      {{>header}}
 </head>
@@ -12,7 +12,100 @@
 <header>
     {{>navbar}}
 </header>
-    <h1>INDEX</h1>
+    <div id="warning">
+    </div>
+    <div id="result">
+        <i>Secret Word:</i>
+        <h2 class="secret"></h2>
+
+        <h3 id="again">Play Again?</h3>
+        <label>Number of Letters</label>
+        <select id="numLettersSelect">
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+        </select>
+        <div class="result-buttons">
+            <button id="solo">Solo</button>
+            <button id="match">Match</button>
+        </div>
+    </div>
+    <div id="gameContainer">
+        <i id="hideCount">{{ boxes.length }}</i>
+        <div id="guesses">
+            {{!-- correct, wrong-placement, not-in-word --}}
+            <div class="guess-row">
+                {{#each boxes}}
+                    <h2 class="guess-letter"></h2>
+                {{/each}}
+            </div>
+            <div class="guess-row">
+                {{#each boxes}}
+                    <h2 class="guess-letter"></h2>
+                {{/each}}
+            </div>
+            <div class="guess-row">
+                {{#each boxes}}
+                    <h2 class="guess-letter"></h2>
+                {{/each}}
+            </div>
+            <div class="guess-row">
+                {{#each boxes}}
+                    <h2 class="guess-letter"></h2>
+                {{/each}}
+            </div>
+            <div class="guess-row">
+                {{#each boxes}}
+                    <h2 class="guess-letter"></h2>
+                {{/each}}
+            </div>
+            <div class="guess-row">
+                {{#each boxes}}
+                    <h2 class="guess-letter"></h2>
+                {{/each}}
+            </div>
+        </div>
+        <div id="keyboard">
+            <div class="keyboard-row">
+                <div id="q" class="key">Q</div>
+                <div id="w" class="key">W</div>
+                <div id="e" class="key">E</div>
+                <div id="r" class="key">R</div>
+                <div id="t" class="key">T</div>
+                <div id="y" class="key">Y</div>
+                <div id="u" class="key">U</div>
+                <div id="i" class="key">I</div>
+                <div id="o" class="key">O</div>
+                <div id="p" class="key">P</div>
+            </div>
+            <div class="keyboard-row">
+                <div id="a" class="key">A</div>
+                <div id="s" class="key">S</div>
+                <div id="d" class="key">D</div>
+                <div id="f" class="key">F</div>
+                <div id="g" class="key">G</div>
+                <div id="h" class="key">H</div>
+                <div id="j" class="key">J</div>
+                <div id="k" class="key">K</div>
+                <div id="l" class="key">L</div>
+            </div>
+            <div class="keyboard-row">
+                <div id="enter" class="key">Enter</div>
+                <div id="z" class="key">Z</div>
+                <div id="x" class="key">X</div>
+                <div id="c" class="key">C</div>
+                <div id="v" class="key">V</div>
+                <div id="b" class="key">B</div>
+                <div id="n" class="key">N</div>
+                <div id="m" class="key">M</div>
+                <div id="backspace" class="key"><img src="/images/backspace.png" alt="backspace"></div>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/app.js"></script>
 <footer>
     {{>footer}}
 </footer>
