@@ -6,33 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/game.css">
     <meta name="letterCount" id="hideCount" content="{{ boxes.length }}">
-    <title>Document</title>
+    <title>Wordle Clash</title>
      {{>header}}
 </head>
 <body>
 <header>
     {{>navbar}}
 </header>
-    <div id="warning">
-    </div>
-    <div id="result">
-        <i>Secret Word:</i>
-        <h2 class="secret"></h2>
-        
-        <h3 id="again">Play Again?</h3>
-        <label>Number of Letters</label>
-        <select id="numLettersSelect">
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-        </select>
-        <div class="result-buttons">
-            <button id="solo">Solo</button>
-            <button id="match">Match</button>
-        </div>
-    </div>
     <div id="gameContainer">
         <div id="guesses">
             {{!-- correct, wrong-placement, not-in-word --}}
@@ -105,7 +85,7 @@
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="js/app.js"></script>
+    <script type="module" src="js/app.js"></script>
 <footer>
     {{>footer}}
 </footer>
