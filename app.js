@@ -9,7 +9,11 @@ const profileRoutes = require("./routes/profile");
 const dbtestRoutes = require("./routes/dbtest"); //NOTE for testing
 
 const sessionMiddleware = require("./middleware/sessionMiddleware");
+
+const authenticateMiddleware = require("./middleware/authenticateMiddleware");
+
 const resLocalsMiddleware = require("./middleware/resLocalsMiddleware");
+
 const registerWordleHandlers = require("./socket/registerWordleHandlers");
 const registerTournamentHandlers = require("./socket/registerTournamentHandlers");
 
@@ -26,6 +30,10 @@ app.set("view engine", "hbs");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
+
+app.use("/user", authenticateMiddleware, userRoutes);
+app.use("/", indexRoutes);
+
 app.use(resLocalsMiddleware);
 
 io.of("/wordle").use((socket, next) => {
