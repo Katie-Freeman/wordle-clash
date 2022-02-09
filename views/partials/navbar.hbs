@@ -8,6 +8,7 @@
 				<a data-toggle="dropdown" class="dropdown-toggle" >Login</a>
 				<ul class="dropdown-menu form-wrapper">					
 					<li>
+						{{^authenticated}}
 						<form action="/user/login" method="POST">
 							<div class="form-group">
 								<input id="loginUsername" type="text" class="form-control" placeholder="Username" name="name" required="required">
@@ -20,6 +21,7 @@
 								<a href="#">Forgot Your password?</a>
 							</div> --}}
 						</form>
+						{{/authenticated}}
 						    {{#message}}
 							<div class="alert alert-danger" role="alert">
 							{{message}}
@@ -29,6 +31,7 @@
 				</ul>
 			</li>
 			<li>
+				{{^authenticated}}
 				<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle get-started-btn mt-1 mb-1">Sign up</a>
 				<ul class="dropdown-menu form-wrapper">					
 					<li>
@@ -48,10 +51,16 @@
 							</div>
 							<input id="submitBtn" type="submit" class="btn btn-primary btn-block" disabled value="Sign up">
 						</form>
+						{{/authenticated}}
 					</li>
 				</ul>
 			</li>
+			{{#authenticated}}
+			<a class="nav-link" href="/users/profile">Profile</a>
+			<p>Hi {{User.name}}</p>
+			{{/authenticated}}
 		</ul>
+		
 	</div>
 </nav>
 </body>

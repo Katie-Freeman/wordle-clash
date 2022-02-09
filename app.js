@@ -8,6 +8,7 @@ const indexRoutes = require("./routes/index");
 const session = require("express-session");
 
 const sessionMiddleware = require("./middleware/sessionMiddleware");
+const authenticateMiddleware = require("./middleware/authenticateMiddleware");
 const registerWordleHandlers = require("./socket/registerWordleHandlers");
 const registerTournamentHandlers = require("./socket/registerTournamentHandlers");
 
@@ -25,7 +26,7 @@ app.set("view engine", "hbs");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
-app.use("/user", userRoutes);
+app.use("/user", authenticateMiddleware, userRoutes);
 app.use("/", indexRoutes);
 
 io.of("/wordle").use((socket, next) => {
