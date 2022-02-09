@@ -31,9 +31,6 @@ app.set("view engine", "hbs");
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
 
-app.use("/user", authenticateMiddleware, userRoutes);
-app.use("/", indexRoutes);
-
 app.use(resLocalsMiddleware);
 
 io.of("/wordle").use((socket, next) => {
@@ -46,7 +43,7 @@ io.of("/tournaments").use((socket, next) => {
 });
 
 app.use("/profile", profileRoutes);
-app.use("/dbtest", dbtestRoutes);
+app.use("/dbtest", dbtestRoutes); //NOTE: for test
 app.use("/user", userRoutes);
 app.use("/", indexRoutes);
 app.use(express.static("public"));

@@ -6,9 +6,8 @@ const models = require("../models");
 router.get("/", (req, res) => {
   res.render("dbtest");
 });
-// forcing dif
 
-router.post("/", (req, res) => {
+router.post("/adduser", (req, res) => {
   const name = req.body.testDbUser;
   const email = req.body.testDbEmail;
   const pass = req.body.testDbPass;
@@ -24,7 +23,7 @@ router.post("/", (req, res) => {
   });
 });
 
-router.post("/game", async (req, res, next) => {
+router.post("/game-multi", async (req, res, next) => {
   const name1 = req.body.testDbGameUser1;
   const attempts1 = parseInt(req.body.testDbGameAttemptsUser1);
   const won1 = !!req.body.testDbWon1;
@@ -72,11 +71,33 @@ router.post("/game", async (req, res, next) => {
   console.log(user2);
 
   res.redirect("/dbtest");
-
-  // await models.GameState.build({
-  //     gr_id
-  // })
-  // const gameR = await GameRoom.create(req.body)
 });
-console.log("tets");
+
+router.post("/game-single", async (req, res, next) => {
+  const user_id = req.body.testDbGameUser;
+  const attempts = parseInt(req.body.testDbGameAttemptsUser);
+  const win = !!req.body.testDbWon;
+  const NumberOfWords = parseInt(req.body.NumberOfWords);
+
+  console.log(user_id);
+  console.log(attempts);
+  console.log(win);
+  console.log(NumberOfWords);
+
+  let gameUser = models.SoloStat.build({
+    user_id: user_id,
+    win: win,
+    letterCount: NumberOfWords,
+    guesses: attempts,
+  });
+
+  let user = await gameUser.save();
+
+  console.log("_________________________");
+  console.log(user);
+
+  res.redirect("/dbtest");
+});
+
+console.log("test");
 module.exports = router;
