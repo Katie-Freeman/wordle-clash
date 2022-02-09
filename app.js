@@ -11,7 +11,7 @@ const sessionMiddleware = require("./middleware/sessionMiddleware");
 const registerWordleHandlers = require("./socket/registerWordleHandlers");
 const registerTournamentHandlers = require("./socket/registerTournamentHandlers");
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 // const PORT = 3000;
 
 app.engine(
@@ -25,27 +25,28 @@ app.set("view engine", "hbs");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
+app.use("/user", userRoutes);
+app.use("/", indexRoutes);
 
-io.of('/wordle').use((socket, next) => {
-    // grants access to session within io handlers
-    sessionMiddleware(socket.request, {}, next);
-})
-io.of('/tournaments').use((socket, next) => {
-    // grants access to session within io handlers
-    sessionMiddleware(socket.request, {}, next);
-})
+io.of("/wordle").use((socket, next) => {
+  // grants access to session within io handlers
+  sessionMiddleware(socket.request, {}, next);
+});
+io.of("/tournaments").use((socket, next) => {
+  // grants access to session within io handlers
+  sessionMiddleware(socket.request, {}, next);
+});
 app.use(express.static("public"));
 
-app.get('/game', (req, res) => {
-    let letterCount = 4;
-    if (req.session && req.session.lastLetterCount) {
-        letterCount = req.session.lastLetterCount;
-    }
+app.get("/game", (req, res) => {
+  let letterCount = 4;
+  if (req.session && req.session.lastLetterCount) {
+    letterCount = req.session.lastLetterCount;
+  }
 
-    const letterBoxes = new Array(letterCount).fill('.');
-    res.render('game', {boxes: letterBoxes})
-})
-
+  const letterBoxes = new Array(letterCount).fill(".");
+  res.render("game", { boxes: letterBoxes });
+});
 
 io.of("/wordle").on("connection", (socket) => {
   // Allows socket events to be handled in a separate file
