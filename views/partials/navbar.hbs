@@ -1,6 +1,8 @@
 <nav class="navbar navbar-default navbar-expand-lg navbar-light">
     <ul class="nav navbar-nav navbar-right">
         {{#if username}}
+			<a class="nav-link" href="/users/profile">Profile</a>
+	
             <li class="nav-item">
                 <a>{{username}}</a>
             </li>
@@ -22,9 +24,6 @@
 								<input id="loginPassword" type="password" class="form-control" placeholder="Password" name="password" required="required">
 							</div>
 							<input type="submit" class="btn btn-primary btn-block" value="Login">
-							{{!-- <div class="form-footer">
-								<a href="#">Forgot Your password?</a>
-							</div> --}}
 						</form>
 						{{#if message}}
 							<div class="alert alert-danger" role="alert">
@@ -60,8 +59,7 @@
 					</li>
 				</ul>
 			</li>
-			<a class="nav-link" href="/users/profile">Profile</a>
-			<p>Hi {{User.name}}</p>
+
 			{{/if}}
 		</ul>
 	</div>
