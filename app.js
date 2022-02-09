@@ -6,14 +6,17 @@ const hbs = require("express-hbs");
 const userRoutes = require("./routes/user");
 const indexRoutes = require("./routes/index");
 const utilsRoutes = require("./routes/utils");
+const profileRoutes = require("./routes/profile");
+const dbtestRoutes = require("./routes/dbtest"); //NOTE for testing
+const models = require("./models");
 const session = require("express-session");
 
 const sessionMiddleware = require("./middleware/sessionMiddleware");
 const registerWordleHandlers = require("./socket/registerWordleHandlers");
 const registerTournamentHandlers = require("./socket/registerTournamentHandlers");
 
-const PORT = process.env.PORT || 8080;
-// const PORT = 3000;
+// const PORT = process.env.PORT || 8080;
+const PORT = 3000;
 
 app.engine(
   "hbs",
@@ -30,6 +33,8 @@ app.use(sessionMiddleware);
 app.use("/user", userRoutes);
 app.use("/utils", utilsRoutes);
 app.use("/index", indexRoutes);
+app.use("/profile", profileRoutes);
+app.use("/dbtest", dbtestRoutes);
 
 app.use(express.static("public"));
 

@@ -1,28 +1,29 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/app_profile.js"></script>
 <script>
 	// Prevent dropdown menu from closing when click inside the form
-	$(document).on("click", ".navbar-right .dropdown-menu", function(e){
-		e.stopPropagation();
-	});
-</script>
-<script >
-	// Prevent dropdown menu from closing when click inside the form
-	$(document).on("click", ".navbar-right .dropdown-menu", function(e){
+	$(document).on("click", ".navbar-right .dropdown-menu", function (e) {
 		e.stopPropagation();
 	});
 </script>
 <script>
-const registerPassword = document.getElementById("registerPassword");
-const confirmPassword = document.getElementById("confirmPassword");
-const submitBtn = document.getElementById("submitBtn");
+	// Prevent dropdown menu from closing when click inside the form
+	$(document).on("click", ".navbar-right .dropdown-menu", function (e) {
+		e.stopPropagation();
+	});
+</script>
+<script>
+	const registerPassword = document.getElementById("registerPassword");
+	const confirmPassword = document.getElementById("confirmPassword");
+	const submitBtn = document.getElementById("submitBtn");
 
-var check = function () {
-  if (registerPassword.value == confirmPassword.value) {
-    submitBtn.disabled = false;
-  } else {
-	  submitBtn.disabled = true;
-  } 
-}
+	var check = function () {
+		if (registerPassword.value == confirmPassword.value) {
+			submitBtn.disabled = false;
+		} else {
+			submitBtn.disabled = true;
+		}
+	}
 
 </script>
