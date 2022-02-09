@@ -25,8 +25,8 @@ router.post("/login", async (req, res) => {
     if (user != null) {
         bcrypt.compare(password, user.password, (error, result) => {
             if (result) {
-                req.session.user = { userId: user.id };
-                res.redirect("/game");
+                req.session.user = { userId: user.id, name: name };
+                res.redirect("/");
             } else {
                 res.render("index", { message: "Incorrect password" });
             }
@@ -60,6 +60,7 @@ router.post("/register", async (req, res) => {
                 try {
                     let savedUser = await user.save();
                     if (savedUser != null) {
+                        req.session.user = { userId: savedUser.id, name: name };
                         res.redirect("/");
                     } else {
                         res.render("/register", {

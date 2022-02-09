@@ -1,24 +1,27 @@
-const req = require("express/lib/request");
 const words = require("./words/words");
+const models = require("../models");
 
-const connectedUsers = [];
+let connectedUsers = [];
 const usersLookingForMatch = [];
 
 const registerWordleHandlers = (io, socket) => {
     const { session } = socket.request;
     let socketUser = {};
-    console.log(session);
+
     if (session) {
         if (!session.socketUser) {
             session.socketUser = {
                 sessionId: session.id,
             };
         }
+
+        if (session.user) {
+            connectedUsers.push(session.user.name);
+        }
         socketUser = session.socketUser;
         session.save();
     }
 
-    console.log(socketUser);
     const generateSecretWord = (numLetters) => {
         const wordCount = words[numLetters].length;
         const randomIndex = Math.floor(Math.random() * wordCount);
@@ -28,6 +31,21 @@ const registerWordleHandlers = (io, socket) => {
     const getMatchesInWord = (word, letter) => {
         const matches = [...word.matchAll(letter)];
         return matches.map((match) => match.index);
+    };
+
+    const handleLoss = async () => {
+        if (session.user) {
+            if (socketUser.gameMode === "solo") {
+                const stat = models.SoloStat.build({
+                    user_id: session.user.userId,
+                    letterCount: socket.numLetters,
+                    guesses: 6,
+                    win: false,
+                });
+
+                await stat.save();
+            }
+        }
     };
 
     const evaluateGuessSpecifics = (guess, count) => {
@@ -83,13 +101,25 @@ const registerWordleHandlers = (io, socket) => {
         const socketData = { results };
         if (count === 6) {
             socketData.secretWord = socket.secretWord;
+            handleLoss();
         }
 
         socket.emit("guess-results", socketData);
     };
 
-    const handleWordGuessed = async () => {
-        // handle db calls
+    const handleWordGuessed = async (count) => {
+        if (session.user) {
+            if (socketUser.gameMode === "solo") {
+                console.log(socket.numLetters);
+                const stat = models.SoloStat.build({
+                    user_id: session.user.userId,
+                    letterCount: socket.numLetters,
+                    guesses: count,
+                    win: true,
+                });
+                await stat.save();
+            }
+        }
         socket.emit("correct-word");
     };
 
@@ -121,9 +151,17 @@ const registerWordleHandlers = (io, socket) => {
         ) {
             socket.emit("invalid-guess");
         } else if (guess === socket.secretWord) {
-            handleWordGuessed();
+            handleWordGuessed(guessCount);
         } else {
             evaluateGuessSpecifics(guess, guessCount);
+        }
+    });
+
+    socket.on("disconnect", () => {
+        if (session.user) {
+            connectedUsers = connectedUsers.filter(
+                (user) => user !== session.user.name
+            );
         }
     });
 };
