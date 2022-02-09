@@ -1,66 +1,78 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
 const router = express.Router();
+const bcrypt = require("bcrypt");
 const models = require("../models");
-const { redirect } = require("express/lib/response");
 
 const SALT_ROUNDS = 10;
-
-router.get("/register", (req, res) => {
-    res.render("register");
-});
 
 router.get("/login", (req, res) => {
     res.render("login");
 });
 
-router.post("/register", async (req, res) => {
-    try {
-        const { email, username, password, passwordRepeat } = req.body;
-
-        if (password !== passwordRepeat) {
-            res.render("index", { error: "Passwords do not match!" });
-        }
-
-        const salt = await bcrypt.genSalt(SALT_ROUNDS);
-        const hash = await bcrypt.hash(password, salt);
-
-        const user = models.User.build({
-            name: username,
-            email,
-            password: hash,
-        });
-
-        await user.save();
-        req.session.username = username;
-        req.session.save();
-    } catch (err) {
-        console.log(err);
-    } finally {
-        res.redirect("/");
-    }
+router.get("/register", (req, res) => {
+    res.render("register");
 });
 
 router.post("/login", async (req, res) => {
-    const { username, password } = req.body;
+    let name = req.body.name;
+    let password = req.body.password;
 
-    try {
-        const user = await models.User.findOne({
-            where: {
-                name: username,
-            },
+    let user = await models.User.findOne({
+        where: {
+            name: name,
+        },
+    });
+    if (user != null) {
+        bcrypt.compare(password, user.password, (error, result) => {
+            if (result) {
+                req.session.user = { userId: user.id };
+                res.redirect("/game");
+            } else {
+                res.render("index", { message: "Incorrect password" });
+            }
         });
+    } else {
+        res.render("index", { message: "Wrong Username" });
+    }
+});
 
-        const result = bcrypt.compare(password, user.password);
-        if (!result) {
-            throw new Error("Error logging in");
-        }
+router.post("/register", async (req, res) => {
+    let name = req.body.name;
+    let email = req.body.email;
+    let password = req.body.password;
 
-        req.session.username = username;
-    } catch (err) {
-        console.log(err);
-    } finally {
-        res.redirect("/");
+    let persistedUser = await models.User.findOne({
+        where: {
+            email: email,
+        },
+    });
+
+    if (persistedUser == null) {
+        bcrypt.hash(password, SALT_ROUNDS, async (error, hash) => {
+            if (error) {
+                res.render("/register", { message: "Error creating user" });
+            } else {
+                let user = models.User.build({
+                    name: name,
+                    email: email,
+                    password: hash,
+                });
+                try {
+                    let savedUser = await user.save();
+                    if (savedUser != null) {
+                        res.redirect("/");
+                    } else {
+                        res.render("/register", {
+                            message: "User already exists!",
+                        });
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
+    } else {
+        res.render("/register", { message: "User already exists!" });
     }
 });
 
