@@ -14,7 +14,7 @@ let user;
 let currentRow;
 
 const clearPopups = () => {
-    const popupIds = ["result", "newGame"];
+    const popupIds = ["result", "newGame", "newMatch"];
     popupIds.forEach((id) => {
         const el = document.getElementById(id);
         if (el) {
@@ -42,7 +42,7 @@ const displayInvalidSubmission = (message) => {
 };
 
 const setupNewGame = (mode) => {
-    guessCount = 0;
+    guessCount = 1;
     currentGuessString = "";
     playing = true;
     const lettersH2s = gameDisplay.makeGuessLetterBoxes(numLetters);
@@ -50,20 +50,39 @@ const setupNewGame = (mode) => {
         guesses.children[i].innerHTML = lettersH2s.join("");
     }
     keyboard.innerHTML = gameDisplay.makeNewKeyboardHTML();
-
-    socket.emit("new-game", { gameMode: "solo", numLetters });
 };
 
 const handleNewSoloGameFromPopup = (letterCount) => {
     numLetters = letterCount;
-    setupNewGame();
+    socket.emit("new-game", { gameMode: "solo", numLetters });
+};
+
+const handleNewMatchGameFromPopup = (letterCount) => {
+    clearPopups();
+    numLetters = letterCount;
+    socket.emit("new-game", { gameMode: "match", numLetters });
+};
+
+const handleInviteFromPopup = (letterCount) => {
+    clearPopups();
+    numLetters = letterCount;
+    socket.emit("new-game", { gameMode: "invite", numLetters });
+};
+
+const handleMatchFromPopup = () => {
+    clearPopups();
+    gameDisplay.displayMakeMatchBox(
+        handleNewMatchGameFromPopup,
+        handleInviteFromPopup
+    );
 };
 
 const displayResult = (secretWord) => {
     gameDisplay.displayResultsBox(
         user,
         secretWord.toUpperCase(),
-        handleNewSoloGameFromPopup
+        handleNewSoloGameFromPopup,
+        handleMatchFromPopup
     );
 };
 
@@ -114,8 +133,10 @@ const submitAnswer = () => {
     }
 };
 
+// socket handlers
+
 socket.on("connect", () => {
-    setupNewGame();
+    socket.emit("new-game", { gameMode: "solo", numLetters });
 });
 
 socket.on("user-info", (data) => {
@@ -125,6 +146,7 @@ socket.on("user-info", (data) => {
 socket.on("secret-word", () => {
     setCurrentRow();
     clearPopups();
+    setupNewGame();
     playing = true;
 });
 
@@ -136,7 +158,6 @@ socket.on("correct-word", () => {
     for (let i = 0; i < numLetters; i++) {
         updateAfterXMs(i * 50, currentRow.children[i], "correct");
     }
-    // emit to get stats ?
     displayResult(currentGuessString);
     playing = false;
 });
@@ -156,11 +177,23 @@ socket.on("guess-results", (data) => {
     }
 });
 
+socket.on("unable-to-match", (data) => {
+    alert(data.message);
+});
+
+// Other Event Handlers
+
 newGameLink.addEventListener("click", () => {
-    gameDisplay.displayNewGameBox(user, handleNewSoloGameFromPopup);
+    clearPopups();
+    gameDisplay.displayNewGameBox(
+        user,
+        handleNewSoloGameFromPopup,
+        handleMatchFromPopup
+    );
 });
 
 keyboard.addEventListener("click", (e) => {
+    clearPopups();
     if (e.target.id.length === 1) {
         addLetterToGuess(e.target.id);
     } else if (
@@ -175,6 +208,7 @@ keyboard.addEventListener("click", (e) => {
 
 window.addEventListener("keydown", (e) => {
     if (e.target !== document.body) return;
+    clearPopups();
     if (e.key === "Enter") {
         submitAnswer();
     } else if (e.key === "Backspace") {
