@@ -67,7 +67,21 @@ const displayWarningBox = (message) => {
     setTimeout(() => document.body.removeChild(warning), 850);
 };
 
-const displayNewGameControls = () => {
+const setupClickHandlers = (parentEl, soloHandler, matchHandler) => {
+    const numLettersSelect = parentEl.querySelector("#numLettersSelect");
+    const solo = parentEl.querySelector("#solo");
+
+    solo.addEventListener("click", () => {
+        const letterCount = parseInt(numLettersSelect.value);
+        soloHandler(letterCount);
+    });
+};
+
+const displayNewGameControls = (user) => {
+    const matchButton = user
+        ? '<button id="match">Match</button>'
+        : "<i>Log in or create an account to match against others.</i>";
+
     return `
         <select id="numLettersSelect">
             <option>4</option>
@@ -76,14 +90,28 @@ const displayNewGameControls = () => {
             <option>7</option>
             <option>8</option>
         </select>
-        <div class="game-buttons">
+        <div class="gameButtons">
             <button id="solo">Solo</button>
-            <button id="match">Match</button>
+            ${matchButton}
         </div>
     `;
 };
 
-const displayResultsBox = (secretWord, callback) => {
+const displayNewGameBox = (user, soloHandler, matchHandler) => {
+    const newGame = document.createElement("div");
+    newGame.id = "newGame";
+    newGame.innerHTML = `
+        <h3>New Game</h3>
+        <i>Warning: Current game's stats will NOT be saved</i>
+        ${displayNewGameControls(user)}
+    `;
+
+    setupClickHandlers(newGame, soloHandler, matchHandler);
+    document.body.appendChild(newGame);
+    setTimeout(() => (newGame.className = "active"), 1);
+};
+
+const displayResultsBox = (user, secretWord, soloHandler, matchHandler) => {
     const result = document.createElement("div");
     result.id = "result";
     result.innerHTML = `
@@ -91,17 +119,10 @@ const displayResultsBox = (secretWord, callback) => {
         <h2 class="secret">${secretWord}</h2>
         
         <h3 id="again">Play Again?</h3>
-        ${displayNewGameControls()}
+        ${displayNewGameControls(user)}
     `;
 
-    const numLettersSelect = result.querySelector("#numLettersSelect");
-    const solo = result.querySelector("#solo");
-
-    solo.addEventListener("click", () => {
-        const letterCount = parseInt(numLettersSelect.value);
-        callback(letterCount);
-    });
-
+    setupClickHandlers(newGame, soloHandler, matchHandler);
     document.body.appendChild(result);
     setTimeout(() => (result.className = "active"), 1);
 };
@@ -112,5 +133,6 @@ export default {
     makeGuessLetterBoxes,
     makeNewKeyboardHTML,
     displayWarningBox,
+    displayNewGameBox,
     displayResultsBox,
 };

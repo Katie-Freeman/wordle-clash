@@ -1,22 +1,27 @@
 import gameDisplay from "./gameDisplay.js";
 const socket = io("/wordle");
-const warning = document.getElementById("warning");
-const result = document.getElementById("result");
-const numLettersSelect = document.getElementById("numLettersSelect");
-const solo = document.getElementById("solo");
-const match = document.getElementById("match");
-const gameContainer = document.getElementById("gameContainer");
-const hideCount = document.getElementById("hideCount");
+const letterCountMeta = document.getElementById("letterCountMeta");
+const newGameLink = document.getElementById("newGameLink");
 const guesses = document.getElementById("guesses");
 const keyboard = document.getElementById("keyboard");
 
 const reLetters = /[a-zA-Z]/;
 let guessCount = 0;
 let currentGuessString = "";
-let numLetters = parseInt(hideCount.content);
+let numLetters = parseInt(letterCountMeta.content);
 let playing = false;
-
+let user;
 let currentRow;
+
+const clearPopups = () => {
+    const popupIds = ["result", "newGame"];
+    popupIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+            document.body.removeChild(el);
+        }
+    });
+};
 
 const setCurrentRow = () => {
     if (currentRow) {
@@ -49,13 +54,17 @@ const setupNewGame = (mode) => {
     socket.emit("new-game", { gameMode: "solo", numLetters });
 };
 
-const handleNewGamePopup = (letterCount) => {
+const handleNewSoloGameFromPopup = (letterCount) => {
     numLetters = letterCount;
     setupNewGame();
 };
 
 const displayResult = (secretWord) => {
-    gameDisplay.displayResultsBox(secretWord.toUpperCase(), handleNewGamePopup);
+    gameDisplay.displayResultsBox(
+        user,
+        secretWord.toUpperCase(),
+        handleNewSoloGameFromPopup
+    );
 };
 
 const updateAfterXMs = (ms, target, className) => {
@@ -109,12 +118,13 @@ socket.on("connect", () => {
     setupNewGame();
 });
 
+socket.on("user-info", (data) => {
+    user = data.user;
+});
+
 socket.on("secret-word", () => {
     setCurrentRow();
-    const result = document.getElementById("result");
-    if (result) {
-        document.body.removeChild(result);
-    }
+    clearPopups();
     playing = true;
 });
 
@@ -144,6 +154,10 @@ socket.on("guess-results", (data) => {
     } else {
         displayResult(data.secretWord);
     }
+});
+
+newGameLink.addEventListener("click", () => {
+    gameDisplay.displayNewGameBox(user, handleNewSoloGameFromPopup);
 });
 
 keyboard.addEventListener("click", (e) => {
