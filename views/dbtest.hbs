@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DBtest</title>
+    </head>
+
+
+    <h1>DB TEST</h1>
+    <form method="POST" action="/dbtest">
+        <input type="text" placeholder="User" name="testDbUser">
+        <input type="text" placeholder="Email" name="testDbEmail">
+        <input type="text" placeholder="Pass" name="testDbPass">
+        <button id="btnTestAddUser">Add User</button>
+    </form>
+    <br>
+
+    <form method="POST" action="/dbtest/game">
+        <input type="text" placeholder="User1" name="testDbGameUser1">
+        <label for="">attempts: </label>
+        <input type="number" placeholder="# of Attempts User1" name="testDbGameAttemptsUser1">
+        <input type="checkbox" placeholder="Winner Boolean" name="testDbWon1">
+        <label for="">winner user1</label>
+        <br>
+        <input type="text" placeholder="User2" name="testDbGameUser2">
+        <label for="">attempts: </label>
+        <input type="number" placeholder=" # of Attempts User2" name="testDbGameAttemptsUser2">
+        <input type="checkbox" placeholder="Winner Boolean" name="testDbWon2">
+        <label for="">winner user2</label>
+        <br>
+        <label for="">numberof words</label>
+        <select name="NumberOfWords">
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+
+
+
+        <button id="btnTestAddGame">Add Game</button>
+
+    </form>
+    <br>
+
+
+
+    </body>
+
+</html>

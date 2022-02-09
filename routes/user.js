@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const models = require("../models");
+const authenticateMiddleware = require("../middleware/authenticateMiddleware");
 
 const SALT_ROUNDS = 10;
 

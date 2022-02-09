@@ -4,7 +4,8 @@
 			<a class="nav-link" href="/users/profile">Profile</a>
 	
             <li class="nav-item">
-                <a>{{username}}</a>
+				<a class="nav-link" href="/users/profile">Profile</a>
+				<p>Hi {{username}}</p>
             </li>
             <li class="nav-item">
                 <a href="/user/logout">Log Out</a>
@@ -14,7 +15,6 @@
 			<li class="nav-item">
 				<a data-toggle="dropdown" class="dropdown-toggle" >Login</a>
 				<ul class="dropdown-menu form-wrapper">					
-					<li>
 					<li class="nav-item">
 						<form action="/user/login" method="POST">
 							<div class="form-group">
@@ -34,7 +34,6 @@
 				</ul>
 			</li>
 			<li>
-				
 
 			<li class="nav-item">
 				<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle get-started-btn mt-1 mb-1">Sign up</a>
@@ -59,8 +58,7 @@
 					</li>
 				</ul>
 			</li>
-
 			{{/if}}
-		</ul>
+		</ul>		
 	</div>
 </nav>                                                    
