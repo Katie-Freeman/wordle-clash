@@ -67,21 +67,48 @@ const displayWarningBox = (message) => {
     setTimeout(() => document.body.removeChild(warning), 850);
 };
 
-const setupClickHandlers = (parentEl, soloHandler, matchHandler) => {
-    const numLettersSelect = parentEl.querySelector("#numLettersSelect");
-    const solo = parentEl.querySelector("#solo");
+const setupInviteHandler = (inviteHandler, letterCount) => {
+    const invite = parentEl.querySelector("#invite");
+    const inviteName = parentEl.querySelector("#inviteName");
 
-    solo.addEventListener("click", () => {
-        const letterCount = parseInt(numLettersSelect.value);
-        soloHandler(letterCount);
+    invite.addEventListener("click", () => {
+        const userToInvite = inviteName.value;
+        if (!userToInvite) {
+            alert("Please enter in a username.");
+        } else {
+            inviteHandler(letterCount);
+        }
     });
 };
 
-const displayNewGameControls = (user) => {
-    const matchButton = user
-        ? '<button id="match">Match</button>'
-        : "<i>Log in or create an account to match against others.</i>";
+const setupClickHandlers = (
+    parentEl,
+    soloHandler,
+    matchHandler,
+    inviteHandler
+) => {
+    const numLettersSelect = parentEl.querySelector("#numLettersSelect");
+    const solo = parentEl.querySelector("#solo");
+    const match = parentEl.querySelector("#match");
 
+    const letterCount = parseInt(numLettersSelect.value);
+    if (solo) {
+        solo.addEventListener("click", () => {
+            soloHandler(letterCount);
+        });
+    }
+    if (match) {
+        match.addEventListener("click", () => {
+            matchHandler(letterCount);
+        });
+    }
+
+    if (inviteHandler) {
+        setupInviteHandler(inviteHandler, letterCount);
+    }
+};
+
+const displaySelectOptions = () => {
     return `
         <select id="numLettersSelect">
             <option>4</option>
@@ -90,8 +117,19 @@ const displayNewGameControls = (user) => {
             <option>7</option>
             <option>8</option>
         </select>
+    `;
+};
+
+const displayNewGameControls = (user) => {
+    const matchButton = user
+        ? '<button id="match">Match</button>'
+        : "<i>Log in or create an account to match against others.</i>";
+
+    return `
+        ${displaySelectOptions()}
         <div class="gameButtons">
             <button id="solo">Solo</button>
+            <hr class="hr">
             ${matchButton}
         </div>
     `;
@@ -100,6 +138,7 @@ const displayNewGameControls = (user) => {
 const displayNewGameBox = (user, soloHandler, matchHandler) => {
     const newGame = document.createElement("div");
     newGame.id = "newGame";
+    newGame.className = "game-popup";
     newGame.innerHTML = `
         <h3>New Game</h3>
         <i>Warning: Current game's stats will NOT be saved</i>
@@ -108,12 +147,34 @@ const displayNewGameBox = (user, soloHandler, matchHandler) => {
 
     setupClickHandlers(newGame, soloHandler, matchHandler);
     document.body.appendChild(newGame);
-    setTimeout(() => (newGame.className = "active"), 1);
+    setTimeout(() => newGame.classList.add("active"), 1);
+};
+
+const displayMakeMatchBox = (matchHandler, inviteHandler) => {
+    const newMatch = document.createElement("div");
+    newMatch.id = "newMatch";
+    newMatch.className = "game-popup";
+    newMatch.innerHTML = `
+        <h3>New Match</h3>
+        ${displaySelectOptions()}
+        <div class="gameButtons">
+            <button id="match">Random Match</button>
+            <hr class="hr">
+            <h4>Invite a Friend</h4>
+            <input type="text" id="inviteName" placeholder="Username to invite">
+            <button id="invite">Invite</button>
+        </div>
+    `;
+
+    setupClickHandlers(newMatch, null, matchHandler, inviteHandler);
+    document.body.appendChild(newMatch);
+    setTimeout(() => newMatch.classList.add("active"), 1);
 };
 
 const displayResultsBox = (user, secretWord, soloHandler, matchHandler) => {
     const result = document.createElement("div");
     result.id = "result";
+    result.className = "game-popup";
     result.innerHTML = `
         <i>Secret Word:</i>
         <h2 class="secret">${secretWord}</h2>
@@ -122,9 +183,9 @@ const displayResultsBox = (user, secretWord, soloHandler, matchHandler) => {
         ${displayNewGameControls(user)}
     `;
 
-    setupClickHandlers(newGame, soloHandler, matchHandler);
+    setupClickHandlers(result, soloHandler, matchHandler);
     document.body.appendChild(result);
-    setTimeout(() => (result.className = "active"), 1);
+    setTimeout(() => result.classList.add("active"), 1);
 };
 
 export default {
@@ -134,5 +195,6 @@ export default {
     makeNewKeyboardHTML,
     displayWarningBox,
     displayNewGameBox,
+    displayMakeMatchBox,
     displayResultsBox,
 };

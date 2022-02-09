@@ -1,5 +1,6 @@
 const words = require("./words/words");
 const models = require("../models");
+const { Op } = require("sequelize");
 
 let connectedUsers = [];
 const usersLookingForMatch = [];
@@ -17,7 +18,7 @@ const registerWordleHandlers = (io, socket) => {
         }
 
         if (session.user) {
-            user = session.user.name;
+            user = { name: session.user.name, id: socket.id };
             connectedUsers.push(user);
         }
         socketUser = session.socketUser;
@@ -132,6 +133,32 @@ const registerWordleHandlers = (io, socket) => {
         socket.emit("secret-word", { secret: "Secret Word Ready" });
     };
 
+    const submitForMatchup = () => {
+        if (usersLookingForMatch.length > 0) {
+        }
+    };
+
+    const initiateInvitationMatch = async (username) => {
+        if (connectedUsers.includes(username)) {
+        } else {
+            const user = models.User.findOne({
+                where: {
+                    name: {
+                        [Op.iLike]: username,
+                    },
+                },
+            });
+
+            let message = "Cannot find player in our database.";
+
+            if (user) {
+                message = "Player not online.";
+            }
+
+            socket.emit("unable-to-match", { message });
+        }
+    };
+
     socket.on("new-game", (data) => {
         socketUser.gameMode = data.gameMode;
         socket.numLetters = parseInt(data.numLetters);
@@ -140,6 +167,8 @@ const registerWordleHandlers = (io, socket) => {
         switch (socketUser.gameMode) {
             case "solo":
                 startSoloGame();
+                break;
+            case "match":
                 break;
             default:
                 startSoloGame();

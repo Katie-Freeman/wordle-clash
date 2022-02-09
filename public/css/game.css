@@ -8,6 +8,10 @@
     display: flex;
 }
 
+.hr {
+    border: 1px solid lightgray;
+    width: 100%;
+}
 #warning {
     background-color: white;
     padding: 1em;
@@ -27,8 +31,7 @@
     z-index: 1;
 }
 
-#newGame,
-#result {
+.game-popup {
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -44,16 +47,15 @@
     box-shadow: 2px 2px 15px gold;
 }
 
-#result {
-    height: 300px;
-}
-
-#newGame.active,
-#result.active {
+.game-popup.active {
     transition: 0.2s ease-in;
     top: 6em;
     opacity: 1;
     z-index: 1;
+}
+
+#result {
+    height: 300px;
 }
 
 .gameButtons {
