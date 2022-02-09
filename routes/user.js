@@ -1,91 +1,79 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const router = express.Router();
+const models = require("../models");
+const { redirect } = require("express/lib/response");
 
 const SALT_ROUNDS = 10;
 
 router.get("/register", (req, res) => {
-  res.render("register");
+    res.render("register");
 });
 
 router.get("/login", (req, res) => {
-  res.render("login");
+    res.render("login");
 });
 
-router.post("/register", (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
+router.post("/register", async (req, res) => {
+    try {
+        const { email, username, password, passwordRepeat } = req.body;
 
-  /* get one user 
-    User.findOne or findByPk... 
-  */
-
-  db.oneOrNone("SELECT userid FROM users WHERE username = $1", [username]).then(
-    (user) => {
-      if (user) {
-        res.render("register", { message: "User name already exists!" });
-      } else {
-        // insert user into the users table
-
-        bcrypt.hash(password, SALT_ROUNDS, function (error, hash) {
-          if (error == null) {
-            /* */
-            db.none("INSERT INTO users(username,password) VALUES($1,$2)", [
-              username,
-              hash,
-            ]).then(() => {
-              res.send("SUCCESS");
-            });
-          }
-        });
-      }
-    }
-  );
-});
-
-router.post("/login", (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
-
-  db.oneOrNone(
-    "SELECT user_id,username,password FROM users WHERE username = $1",
-    [username]
-  ).then((user) => {
-    if (user) {
-      // check for user's password
-
-      bcrypt.compare(password, user.password, function (error, result) {
-        if (result) {
-          // put username and userId in the session
-          if (req.session) {
-            req.session.user = {
-              userId: user.user_id,
-              username: user.username,
-            };
-          }
-
-          res.redirect("/users/match");
-        } else {
-          res.render("login", { message: "Invalid username or password!" });
+        if (password !== passwordRepeat) {
+            res.render("index", { error: "Passwords do not match!" });
         }
-      });
-    } else {
-      // user does not exist
-      res.render("login", { message: "Invalid username or password!" });
+
+        const salt = await bcrypt.genSalt(SALT_ROUNDS);
+        const hash = await bcrypt.hash(password, salt);
+
+        const user = models.User.build({
+            name: username,
+            email,
+            password: hash,
+        });
+
+        await user.save();
+        req.session.username = username;
+        req.session.save();
+    } catch (err) {
+        console.log(err);
+    } finally {
+        res.redirect("/");
     }
-  });
+});
+
+router.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const user = await models.User.findOne({
+            where: {
+                name: username,
+            },
+        });
+
+        const result = bcrypt.compare(password, user.password);
+        if (!result) {
+            throw new Error("Error logging in");
+        }
+
+        req.session.username = username;
+    } catch (err) {
+        console.log(err);
+    } finally {
+        res.redirect("/");
+    }
 });
 
 router.get("/logout", (req, res, next) => {
-  if (req.session) {
-    req.session.destroy((error) => {
-      if (error) {
-        next(error);
-      } else {
-        res.redirect("/login");
-      }
-    });
-  }
+    if (req.session) {
+        req.session.destroy((error) => {
+            if (error) {
+                next(error);
+            } else {
+                res.redirect("/");
+            }
+        });
+    }
 });
 
 module.exports = router;
