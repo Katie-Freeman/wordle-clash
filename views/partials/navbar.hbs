@@ -1,7 +1,14 @@
-
-</head> 
-<body>
 <nav class="navbar navbar-default navbar-expand-lg navbar-light">
+    <ul class="nav navbar-nav navbar-right">
+        {{#if username}}
+            <li>
+                {{username}}
+            </li>
+            <li>
+                <a href="/user/logout">Log Out</a>
+            </li>
+
+        {{else}}
 
 		<ul class="nav navbar-nav navbar-right">			
 			<li>
@@ -53,6 +60,4 @@
 			</li>
 		</ul>
 	</div>
-</nav>
-</body>
-</html>                                                        
+</nav>                                                    

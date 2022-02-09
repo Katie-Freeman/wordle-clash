@@ -5,59 +5,50 @@ const io = require("socket.io")(http);
 const hbs = require("express-hbs");
 const userRoutes = require("./routes/user");
 const indexRoutes = require("./routes/index");
-const session = require("express-session");
 
 const sessionMiddleware = require("./middleware/sessionMiddleware");
+const resLocalsMiddleware = require("./middleware/resLocalsMiddleware");
 const registerWordleHandlers = require("./socket/registerWordleHandlers");
 const registerTournamentHandlers = require("./socket/registerTournamentHandlers");
 
 const PORT = process.env.PORT || 3000;
-// const PORT = 3000;
 
 app.engine(
-  "hbs",
-  hbs.express4({
-    partialsDir: __dirname + "/views/partials",
-  })
+    "hbs",
+    hbs.express4({
+        partialsDir: __dirname + "/views/partials",
+    })
 );
 app.set("views", "./views");
 app.set("view engine", "hbs");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
-app.use("/user", userRoutes);
-app.use("/", indexRoutes);
+app.use(resLocalsMiddleware);
 
 io.of("/wordle").use((socket, next) => {
-  // grants access to session within io handlers
-  sessionMiddleware(socket.request, {}, next);
+    // grants access to session within io handlers
+    sessionMiddleware(socket.request, {}, next);
 });
 io.of("/tournaments").use((socket, next) => {
-  // grants access to session within io handlers
-  sessionMiddleware(socket.request, {}, next);
+    // grants access to session within io handlers
+    sessionMiddleware(socket.request, {}, next);
 });
+
+app.use("/user", userRoutes);
+app.use("/", indexRoutes);
 app.use(express.static("public"));
 
-app.get("/game", (req, res) => {
-  let letterCount = 4;
-  if (req.session && req.session.lastLetterCount) {
-    letterCount = req.session.lastLetterCount;
-  }
-
-  const letterBoxes = new Array(letterCount).fill(".");
-  res.render("game", { boxes: letterBoxes });
-});
-
 io.of("/wordle").on("connection", (socket) => {
-  // Allows socket events to be handled in a separate file
-  registerWordleHandlers(io, socket);
+    // Allows socket events to be handled in a separate file
+    registerWordleHandlers(io, socket);
 });
 
 io.of("/tournaments").on("connection", (socket) => {
-  // Allows socket events to be handled in a separate file
-  registerTournamentHandlers(io, socket);
+    // Allows socket events to be handled in a separate file
+    registerTournamentHandlers(io, socket);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server has started on ${PORT}`);
+http.listen(PORT, () => {
+    console.log(`Wordle Clash has started on ${PORT}`);
 });

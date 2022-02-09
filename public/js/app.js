@@ -167,6 +167,7 @@ keyboard.addEventListener("click", (e) => {
 });
 
 window.addEventListener("keydown", (e) => {
+    if (e.target !== document.body) return;
     if (e.key === "Enter") {
         submitAnswer();
     } else if (e.key === "Backspace") {
