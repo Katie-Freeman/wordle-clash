@@ -1,3 +1,4 @@
+import gameDisplay from "./gameDisplay.js";
 const socket = io("/wordle");
 const warning = document.getElementById("warning");
 const result = document.getElementById("result");
@@ -13,7 +14,7 @@ const reLetters = /[a-zA-Z]/;
 let guessCount = 0;
 let currentGuessString = "";
 let numLetters = parseInt(hideCount.content);
-let playing = true;
+let playing = false;
 
 let currentRow;
 
@@ -27,25 +28,34 @@ const setCurrentRow = () => {
     currentGuessString = "";
 };
 
-const resultToClassMap = {
-    "in-place": "correct",
-    "out-of-place": "wrong-placement",
-    "not-in-word": "not-in-word",
-};
-
 const displayInvalidSubmission = (message) => {
     currentRow.classList.add("shake");
-    warning.innerHTML = message;
-    warning.classList.add("active");
+    gameDisplay.displayWarningBox(message);
     setTimeout(() => {
         currentRow.classList.remove("shake");
-        warning.classList.remove("active");
     }, 650);
 };
 
+const setupNewGame = (mode) => {
+    guessCount = 0;
+    currentGuessString = "";
+    playing = true;
+    const lettersH2s = gameDisplay.makeGuessLetterBoxes(numLetters);
+    for (let i = 0; i < 6; i++) {
+        guesses.children[i].innerHTML = lettersH2s.join("");
+    }
+    keyboard.innerHTML = gameDisplay.makeNewKeyboardHTML();
+
+    socket.emit("new-game", { gameMode: "solo", numLetters });
+};
+
+const handleNewGamePopup = (letterCount) => {
+    numLetters = letterCount;
+    setupNewGame();
+};
+
 const displayResult = (secretWord) => {
-    result.querySelector(".secret").innerHTML = secretWord.toUpperCase();
-    result.classList.add("active");
+    gameDisplay.displayResultsBox(secretWord.toUpperCase(), handleNewGamePopup);
 };
 
 const updateAfterXMs = (ms, target, className) => {
@@ -55,55 +65,6 @@ const updateAfterXMs = (ms, target, className) => {
             `#${target.innerHTML}`
         ).className = `key ${className}`;
     }, ms);
-};
-
-const setupNewGame = (mode) => {
-    guessCount = 0;
-    currentGuessString = "";
-    playing = true;
-    const lettersH2s = new Array(numLetters).fill(
-        '<h2 class="guess-letter"></h2>'
-    );
-    for (let i = 0; i < 6; i++) {
-        guesses.children[i].innerHTML = lettersH2s.join("");
-    }
-
-    keyboard.innerHTML = `<div class="keyboard-row">
-                <div id="q" class="key">Q</div>
-                <div id="w" class="key">W</div>
-                <div id="e" class="key">E</div>
-                <div id="r" class="key">R</div>
-                <div id="t" class="key">T</div>
-                <div id="y" class="key">Y</div>
-                <div id="u" class="key">U</div>
-                <div id="i" class="key">I</div>
-                <div id="o" class="key">O</div>
-                <div id="p" class="key">P</div>
-            </div>
-            <div class="keyboard-row">
-                <div id="a" class="key">A</div>
-                <div id="s" class="key">S</div>
-                <div id="d" class="key">D</div>
-                <div id="f" class="key">F</div>
-                <div id="g" class="key">G</div>
-                <div id="h" class="key">H</div>
-                <div id="j" class="key">J</div>
-                <div id="k" class="key">K</div>
-                <div id="l" class="key">L</div>
-            </div>
-            <div class="keyboard-row">
-                <div id="enter" class="key">Enter</div>
-                <div id="z" class="key">Z</div>
-                <div id="x" class="key">X</div>
-                <div id="c" class="key">C</div>
-                <div id="v" class="key">V</div>
-                <div id="b" class="key">B</div>
-                <div id="n" class="key">N</div>
-                <div id="m" class="key">M</div>
-                <div id="backspace" class="key"><img src="/images/backspace.png" alt="backspace"></div>
-            </div>`;
-
-    socket.emit("new-game", { gameMode: "solo", numLetters });
 };
 
 const updateRowDisplay = () => {
@@ -150,8 +111,11 @@ socket.on("connect", () => {
 
 socket.on("secret-word", () => {
     setCurrentRow();
-    result.classList.remove("active");
-    console.log("ready");
+    const result = document.getElementById("result");
+    if (result) {
+        document.body.removeChild(result);
+    }
+    playing = true;
 });
 
 socket.on("invalid-guess", () => {
@@ -172,7 +136,7 @@ socket.on("guess-results", (data) => {
         updateAfterXMs(
             i * 50,
             currentRow.children[i],
-            resultToClassMap[result]
+            gameDisplay.getResultClass(result)
         );
     });
     if (guessCount < 6) {
@@ -180,11 +144,6 @@ socket.on("guess-results", (data) => {
     } else {
         displayResult(data.secretWord);
     }
-});
-
-solo.addEventListener("click", () => {
-    numLetters = parseInt(numLettersSelect.value);
-    setupNewGame();
 });
 
 keyboard.addEventListener("click", (e) => {
@@ -210,3 +169,9 @@ window.addEventListener("keydown", (e) => {
         addLetterToGuess(e.key.toLowerCase());
     }
 });
+
+window.addEventListener("resize", () => {
+    gameDisplay.calculateVH();
+});
+
+gameDisplay.calculateVH();

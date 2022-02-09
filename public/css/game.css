@@ -14,15 +14,15 @@
     width: 184px;
     text-align: center;
     position: absolute;
-    top: 0em;
+    top: 2em;
     opacity: 0;
     left: calc(50% - 92px);
     border-radius: 20px;
+    transition: 0.2s ease-in;
 }
 
 #warning.active {
-    transition: 0.2s ease-in;
-    top: 2em;
+    top: 6em;
     opacity: 1;
     z-index: 1;
 }
@@ -66,6 +66,7 @@
     background-color: black;
     max-width: 800px;
     height: calc(100vh - 135px);
+    height: calc(var(--vh, 1vh) * 100 - 135px);
     margin: 0 auto;
     color: white;
     font-family: "Overpass Mono", monospace;
@@ -77,6 +78,8 @@
     row-gap: 0.7em;
     background-color: #222;
     padding: 2em 1em 1em;
+    max-height: var(--max, 100vh);
+    overflow-y: auto;
 }
 
 .guess-row {
