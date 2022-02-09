@@ -26,20 +26,26 @@ app.set("view engine", "hbs");
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
 
-app.use("/user", userRoutes);
-app.use("/", indexRoutes);
-
+io.of('/wordle').use((socket, next) => {
+    // grants access to session within io handlers
+    sessionMiddleware(socket.request, {}, next);
+})
+io.of('/tournaments').use((socket, next) => {
+    // grants access to session within io handlers
+    sessionMiddleware(socket.request, {}, next);
+})
 app.use(express.static("public"));
 
-io.use((socket, next) => {
-  // gives access to socket.request.session
-  sessionMiddleware(socket.request, {}, next);
-});
+app.get('/game', (req, res) => {
+    let letterCount = 4;
+    if (req.session && req.session.lastLetterCount) {
+        letterCount = req.session.lastLetterCount;
+    }
 
-io.on("connection", (socket) => {
-  // Allows socket events to be handled in a separate file
-  registerWordleHandlers(io, socket);
-});
+    const letterBoxes = new Array(letterCount).fill('.');
+    res.render('game', {boxes: letterBoxes})
+})
+
 
 io.of("/wordle").on("connection", (socket) => {
   // Allows socket events to be handled in a separate file
