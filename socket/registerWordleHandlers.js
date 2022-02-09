@@ -7,6 +7,7 @@ const usersLookingForMatch = [];
 const registerWordleHandlers = (io, socket) => {
     const { session } = socket.request;
     let socketUser = {};
+    let user;
 
     if (session) {
         if (!session.socketUser) {
@@ -16,11 +17,14 @@ const registerWordleHandlers = (io, socket) => {
         }
 
         if (session.user) {
-            connectedUsers.push(session.user.name);
+            user = session.user.name;
+            connectedUsers.push(user);
         }
         socketUser = session.socketUser;
         session.save();
     }
+
+    socket.emit("user-info", { user });
 
     const generateSecretWord = (numLetters) => {
         const wordCount = words[numLetters].length;
