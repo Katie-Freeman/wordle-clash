@@ -1,6 +1,7 @@
+/* html,
 body {
-  background-color: rgb(228, 228, 228);
-}
+  height: 100vh;
+} */
 
 #profileWrap {
   display: block;
@@ -15,6 +16,15 @@ body {
   border: 1px solid firebrick;
   padding: 20px;
   border-radius: 8px;
+}
+
+#infoName {
+  font-size: 16px;
+  color: firebrick;
+  font-weight: bold;
+}
+#infoEmail {
+  font-weight: bolder;
 }
 
 #statsTable {
@@ -37,6 +47,22 @@ body {
 #statsTable td:nth-child(2) {
   color: firebrick;
 }
-/* #statsTable tr:first-child td:nth-child(2) {
+
+#statGraph {
+  position: relative;
+  width: 320px;
+  margin: auto;
+  height: 100vh;
+}
+#labelTotal {
+  position: absolute;
+  width: 100%;
+  margin-top: 140px;
+}
+
+#gamePlayed {
+  font-size: 28px;
+  color: firebrick;
+} /* #statsTable tr:first-child td:nth-child(2) {
   color: inherit;
-} */
+} */ ;

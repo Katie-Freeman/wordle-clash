@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <title>Document</title>
         {{>header}}
@@ -16,17 +17,28 @@
         </header>
         <div id="profileWrap">
 
-            <h2>Profile </h2>
+            <h3>Profile: </h3>
             <div id="infoWrap">
-                <p>name: <span id="infoName"> {{test.name}} </span> </p>
-                <p>email:<span id="infoEmail">{{test.email}} </span> </p>
-                <p>total<span id="infoEmail">{{test.7.won}} </span> </p>
+
+                <p>name:
+                    <span id="infoName">
+                        {{userProfile.name}}
+                    </span>
+                </p>
+                <p>email:
+                    <span id="infoEmail">
+                        {{userProfile.email}}
+                    </span>
+                </p>
+
+                <input type="hidden" id="chartWin" value={{userProfile.solo.total.win}}>
+                <input type="hidden" id="chartLoss" value={{userProfile.solo.total.loss}}>
 
             </div>
             <div id="tableContainer">
                 <table id="statsTable">
                     <tr>
-                        <td></td>
+                        <td>Solo</td>
                         <td>all</td>
                         <td>4w</td>
                         <td>5w</td>
@@ -35,46 +47,53 @@
                         <td>8w</td>
                     </tr>
                     <tr>
-                        <td>game played</td>
-                        <td>{{test.total.games}}</td>
-                        <td>7</td>
-                        <td>15</td>
-                        <td>6</td>
-                        <td>8</td>
-                        <td>9</td>
+                        <td>played</td>
+                        <td>{{userProfile.solo.total.all}}</td>
+                        <td>{{userProfile.solo.w4.all}}</td>
+                        <td>{{userProfile.solo.w5.all}}</td>
+                        <td>{{userProfile.solo.w6.all}}</td>
+                        <td>{{userProfile.solo.w7.all}}</td>
+                        <td>{{userProfile.solo.w8.all}}</td>
                     </tr>
                     <tr>
                         <td>won</td>
-                        <td>{{test.total.won}}</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
+                        <td>{{userProfile.solo.total.win}}</td>
+                        <td>{{userProfile.solo.w4.win}}</td>
+                        <td>{{userProfile.solo.w5.win}}</td>
+                        <td>{{userProfile.solo.w6.win}}</td>
+                        <td>{{userProfile.solo.w7.win}}</td>
+                        <td>{{userProfile.solo.w8.win}}</td>
                     </tr>
                     <tr>
                         <td>loss</td>
-                        <td>{{test.total.loss}}</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
+                        <td>{{userProfile.solo.total.loss}}</td>
+                        <td>{{userProfile.solo.w4.loss}}</td>
+                        <td>{{userProfile.solo.w5.loss}}</td>
+                        <td>{{userProfile.solo.w6.loss}}</td>
+                        <td>{{userProfile.solo.w7.loss}}</td>
+                        <td>{{userProfile.solo.w8.loss}}</td>
                     </tr>
                     <tr>
                         <td>avrg attempts</td>
-                        <td>{{test.total.avrg}}</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
+                        <td>{{userProfile.solo.total.avrg}}</td>
+                        <td>{{userProfile.solo.w4.avrg}}</td>
+                        <td>{{userProfile.solo.w5.avrg}}</td>
+                        <td>{{userProfile.solo.w6.avrg}}</td>
+                        <td>{{userProfile.solo.w7.avrg}}</td>
+                        <td>{{userProfile.solo.w8.avrg}}</td>
                     </tr>
                 </table>
             </div>
+
             <div id="statGraph">
-                {{!-- js insert --}}
+                <div id="labelTotal">total <br> Games: <br>
+                    <span id="gamePlayed"> {{userProfile.solo.total.all}}</span>
+                </div>
+                <canvas id="myChart">
+                    {{!-- JS insert --}}
+                </canvas>
             </div>
+
         </div>
 
 

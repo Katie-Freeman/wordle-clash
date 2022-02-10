@@ -93,7 +93,7 @@ router.post("/game-single", async (req, res, next) => {
 
   let user = await gameUser.save();
 
-  console.log("_________________________");
+  console.log("+++++++++++++++++++++");
   console.log(user);
 
   res.redirect("/dbtest");
