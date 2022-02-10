@@ -2,9 +2,6 @@ const words = require("./words/words");
 const models = require("../models");
 const { Op } = require("sequelize");
 
-let connectedUsers = [];
-const usersLookingForMatch = [];
-
 const registerWordleHandlers = (io, socket) => {
     const { session } = socket.request;
     let socketUser = {};
@@ -19,13 +16,27 @@ const registerWordleHandlers = (io, socket) => {
 
         if (session.user) {
             user = { name: session.user.name, id: socket.id };
-            connectedUsers.push(user);
+            socket.user = user.name;
+            io.connectedUsers.push(user);
         }
         socketUser = session.socketUser;
         session.save();
     }
+    socket.inMatch = false;
+    socket.opponent = null;
+    socket.room = null;
 
     socket.emit("user-info", { user });
+
+    const getSocketUser = (id) => {
+        return io.of("/wordle").sockets.get(id);
+    };
+
+    const resetMatchState = () => {
+        socket.inMatch = false;
+        socket.opponent = null;
+        socket.room = null;
+    };
 
     const generateSecretWord = (numLetters) => {
         const wordCount = words[numLetters].length;
@@ -49,6 +60,7 @@ const registerWordleHandlers = (io, socket) => {
                 });
 
                 await stat.save();
+                resetMatchState();
             }
         }
     };
@@ -123,6 +135,7 @@ const registerWordleHandlers = (io, socket) => {
                     win: true,
                 });
                 await stat.save();
+                resetMatchState();
             }
         }
         socket.emit("correct-word");
@@ -130,18 +143,62 @@ const registerWordleHandlers = (io, socket) => {
 
     const startSoloGame = () => {
         socket.secretWord = generateSecretWord(socket.numLetters);
-        socket.emit("secret-word", { secret: "Secret Word Ready" });
+        socket.inMatch = false;
+        socket.emit("secret-word-ready", {});
+    };
+
+    const startMatchedGame = (opponent) => {
+        socket.secretWord = generateSecretWord(socket.numLetters);
+        opponent.secretWord = socket.secretWord;
+        [socket, opponent].forEach((userSocket) => {
+            userSocket.inMatch = true;
+            userSocket.room = socket.user;
+
+            // Send self socket and opponent socket to room to emit shared messages from
+            userSocket.to(socket.user);
+        });
+
+        opponent.emit("secret-word-ready", {
+            name: socket.user,
+            numLetters: socket.numLetters,
+        });
+        socket.emit("secret-word-ready", {
+            name: opponent.user,
+            numLetters: socket.numLetters,
+        });
     };
 
     const submitForMatchup = () => {
-        if (usersLookingForMatch.length > 0) {
+        if (!socket.user) return;
+        if (io.usersLookingForMatch.length > 0) {
+            const targetUser = io.usersLookingForMatch[0];
+            const userSocket = getSocketUser(targetUser.id);
+            io.usersLookingForMatch = io.usersLookingForMatch.filter(
+                (user) => user.id !== targetUser.id
+            );
+            userSocket.emit("user-found");
+            socket.emit("user-found");
+            startMatchedGame(userSocket);
+        } else {
+            io.usersLookingForMatch.push(user);
+            socket.emit("waiting");
         }
     };
 
     const initiateInvitationMatch = async (username) => {
-        if (connectedUsers.includes(username)) {
+        if (!socket.user) return;
+        const targetUser = io.connectedUsers.find(
+            (user) => user.name === username
+        );
+        if (targetUser) {
+            const userSocket = getSocketUser(targetUser.id);
+            if (userSocket.inMatch) {
+                socket.emit("user-busy");
+            } else {
+                socket.emit("user-found");
+            }
         } else {
-            const user = models.User.findOne({
+            const user = await models.User.findOne({
                 where: {
                     name: {
                         [Op.iLike]: username,
@@ -150,7 +207,6 @@ const registerWordleHandlers = (io, socket) => {
             });
 
             let message = "Cannot find player in our database.";
-
             if (user) {
                 message = "Player not online.";
             }
@@ -169,6 +225,11 @@ const registerWordleHandlers = (io, socket) => {
                 startSoloGame();
                 break;
             case "match":
+                socket.numLetters = Math.floor(Math.random() * 4) + 4;
+                submitForMatchup();
+                break;
+            case "invite":
+                initiateInvitationMatch(data.username);
                 break;
             default:
                 startSoloGame();
@@ -192,8 +253,8 @@ const registerWordleHandlers = (io, socket) => {
 
     socket.on("disconnect", () => {
         if (session.user) {
-            connectedUsers = connectedUsers.filter(
-                (user) => user !== session.user.name
+            io.connectedUsers = io.connectedUsers.filter(
+                (user) => user.name !== session.user.name
             );
         }
     });
