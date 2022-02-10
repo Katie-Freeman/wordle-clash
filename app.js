@@ -31,11 +31,9 @@ app.use(sessionMiddleware);
 app.use(resLocalsMiddleware);
 app.use(express.urlencoded({ extended: true }));
 
+io.connectedUsers = [];
+io.usersLookingForMatch = [];
 io.of("/wordle").use((socket, next) => {
-  // grants access to session within io handlers
-  sessionMiddleware(socket.request, {}, next);
-});
-io.of("/tournaments").use((socket, next) => {
   // grants access to session within io handlers
   sessionMiddleware(socket.request, {}, next);
 });
