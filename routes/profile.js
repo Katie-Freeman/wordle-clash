@@ -4,11 +4,14 @@ const models = require("../models");
 
 let loginUser_id = 13;
 
+//  req.session.user = { userId: user.id, name: name };
 // router.get("/", (req, res) => {
+
 //   res.render("profile", { test });
 // });
 
 router.get("/", async (req, res, next) => {
+  console.log(req.session.user);
   const user = await models.User.findOne({
     where: { id: loginUser_id },
   });
