@@ -105,9 +105,38 @@
     flex-direction: column;
     row-gap: 0.7em;
     background-color: #222;
-    padding: 2em 1em 1em;
+    padding: 0 1em 1em;
     max-height: var(--max, 100vh);
     overflow-y: auto;
+}
+
+#guesses.loading {
+    justify-content: center;
+    row-gap: 2em;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#match-pending {
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.progress {
+    margin-top: 2em;
+}
+
+.progress-bar.loading {
+    width: 100%;
+    animation: 0.6s linear infinite progress-bar;
+}
+
+@keyframes progress-bar {
+    0% {
+        background-position-x: 40px;
+    }
 }
 
 .guess-row {
@@ -121,11 +150,12 @@
 
 .guess-letter {
     background-color: #222;
-    padding: 12px 24px;
-    width: 65px;
-    height: 56px;
+    /* padding: 12px 24px; */
+    padding: 8px 14px;
+    width: 44px;
+    height: 46px;
     margin: 0;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     line-height: normal;
     border: 1px solid #555;

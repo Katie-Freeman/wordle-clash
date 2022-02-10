@@ -15,8 +15,39 @@ const getResultClass = (result) => {
     return resultToClassMap[result];
 };
 
-const makeGuessLetterBoxes = (count) =>
-    new Array(count).fill('<h2 class="guess-letter"></h2>');
+const getLoadingMessage = (status) => {
+    const statusToMessageMap = {
+        loading: "We're setting up your match!",
+        busy: "Player is in another match! Please try again later.",
+        waiting: "Searching for player to match with...",
+    };
+
+    return statusToMessageMap[status];
+};
+
+const makeGuessLetterBoxes = (count) => {
+    const letterBoxes = Array(count).fill('<h2 class="guess-letter"></h2>');
+    const letterRows = Array(6).fill(`
+        <div class="guess-row">
+            ${letterBoxes.join("")}
+        </div>
+    `);
+    return letterRows.join("");
+};
+
+const makeLoadingHTML = (status = "loading") => {
+    return `
+        <div id="match-pending">
+            <h2>${getLoadingMessage(status)}</h2>
+            <div class="progress">
+                <div 
+                    class="progress-bar progress-bar-striped progress-bar-animated loading"
+                    role="progressbar"
+                ></div>
+            </div>
+        </div>
+    `;
+};
 
 const makeNewKeyboardHTML = () => {
     return `
@@ -67,18 +98,42 @@ const displayWarningBox = (message) => {
     setTimeout(() => document.body.removeChild(warning), 850);
 };
 
-const setupInviteHandler = (inviteHandler, letterCount) => {
+const displayInviteBox = (user, letterCount) => {
+    const newGame = document.createElement("div");
+    newGame.id = "newGame";
+    newGame.className = "game-popup";
+    newGame.innerHTML = `
+        <h3>${user} has invited you to a ${letterCount} letter game!</h3>
+        <p>Do you accept this invitation?</p>
+        <div class="match-options">
+            <button class="btn btn-success">Yes</button>
+            <button class="btn btn-danger">No</button>
+        </div>
+    `;
+    document.body.appendChild(newGame);
+    setTimeout(() => newGame.classList.add("active"), 1);
+};
+
+const setupInviteHandler = (parentEl, inviteHandler, numLettersSelect) => {
     const invite = parentEl.querySelector("#invite");
     const inviteName = parentEl.querySelector("#inviteName");
 
-    invite.addEventListener("click", () => {
+    const sendInvite = () => {
         const userToInvite = inviteName.value;
         if (!userToInvite) {
             alert("Please enter in a username.");
         } else {
-            inviteHandler(letterCount);
+            const letterCount = parseInt(numLettersSelect.value);
+            inviteHandler(letterCount, userToInvite);
+        }
+    };
+
+    inviteName.addEventListener("keydown", ({ key }) => {
+        if (key === "Enter") {
+            sendInvite();
         }
     });
+    invite.addEventListener("click", sendInvite);
 };
 
 const setupClickHandlers = (
@@ -91,20 +146,21 @@ const setupClickHandlers = (
     const solo = parentEl.querySelector("#solo");
     const match = parentEl.querySelector("#match");
 
-    const letterCount = parseInt(numLettersSelect.value);
     if (solo) {
         solo.addEventListener("click", () => {
+            const letterCount = parseInt(numLettersSelect.value);
             soloHandler(letterCount);
         });
     }
     if (match) {
         match.addEventListener("click", () => {
+            const letterCount = parseInt(numLettersSelect.value);
             matchHandler(letterCount);
         });
     }
 
     if (inviteHandler) {
-        setupInviteHandler(inviteHandler, letterCount);
+        setupInviteHandler(parentEl, inviteHandler, numLettersSelect);
     }
 };
 
@@ -122,13 +178,13 @@ const displaySelectOptions = () => {
 
 const displayNewGameControls = (user) => {
     const matchButton = user
-        ? '<button id="match">Match</button>'
+        ? '<button id="match" class="btn btn-success">Match</button>'
         : "<i>Log in or create an account to match against others.</i>";
 
     return `
         ${displaySelectOptions()}
         <div class="gameButtons">
-            <button id="solo">Solo</button>
+            <button id="solo" class="btn btn-primary">Solo</button>
             <hr class="hr">
             ${matchButton}
         </div>
@@ -156,13 +212,13 @@ const displayMakeMatchBox = (matchHandler, inviteHandler) => {
     newMatch.className = "game-popup";
     newMatch.innerHTML = `
         <h3>New Match</h3>
-        ${displaySelectOptions()}
         <div class="gameButtons">
-            <button id="match">Random Match</button>
+            <button id="match" class="btn btn-success">Random Match</button>
             <hr class="hr">
+            ${displaySelectOptions()}
             <h4>Invite a Friend</h4>
             <input type="text" id="inviteName" placeholder="Username to invite">
-            <button id="invite">Invite</button>
+            <button id="invite" class="btn btn-info">Invite</button>
         </div>
     `;
 
@@ -192,8 +248,10 @@ export default {
     calculateVH,
     getResultClass,
     makeGuessLetterBoxes,
+    makeLoadingHTML,
     makeNewKeyboardHTML,
     displayWarningBox,
+    displayInviteBox,
     displayNewGameBox,
     displayMakeMatchBox,
     displayResultsBox,

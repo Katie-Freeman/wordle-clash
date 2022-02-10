@@ -41,14 +41,12 @@ const displayInvalidSubmission = (message) => {
     }, 650);
 };
 
-const setupNewGame = (mode) => {
-    guessCount = 1;
+const setupNewGame = () => {
+    guessCount = 0;
     currentGuessString = "";
     playing = true;
-    const lettersH2s = gameDisplay.makeGuessLetterBoxes(numLetters);
-    for (let i = 0; i < 6; i++) {
-        guesses.children[i].innerHTML = lettersH2s.join("");
-    }
+    guesses.classList.remove("loading");
+    guesses.innerHTML = gameDisplay.makeGuessLetterBoxes(numLetters);
     keyboard.innerHTML = gameDisplay.makeNewKeyboardHTML();
 };
 
@@ -63,10 +61,14 @@ const handleNewMatchGameFromPopup = (letterCount) => {
     socket.emit("new-game", { gameMode: "match", numLetters });
 };
 
-const handleInviteFromPopup = (letterCount) => {
+const handleInviteFromPopup = (letterCount, userToInvite) => {
     clearPopups();
     numLetters = letterCount;
-    socket.emit("new-game", { gameMode: "invite", numLetters });
+    socket.emit("new-game", {
+        gameMode: "invite",
+        numLetters,
+        username: userToInvite,
+    });
 };
 
 const handleMatchFromPopup = () => {
@@ -143,10 +145,14 @@ socket.on("user-info", (data) => {
     user = data.user;
 });
 
-socket.on("secret-word", () => {
-    setCurrentRow();
+socket.on("secret-word-ready", (data) => {
+    if (data.numLetters) {
+        numLetters = data.numLetters;
+    }
+
     clearPopups();
     setupNewGame();
+    setCurrentRow();
     playing = true;
 });
 
@@ -179,6 +185,21 @@ socket.on("guess-results", (data) => {
 
 socket.on("unable-to-match", (data) => {
     alert(data.message);
+});
+
+socket.on("user-found", () => {
+    guesses.classList.add("loading");
+    guesses.innerHTML = gameDisplay.makeLoadingHTML();
+});
+
+socket.on("user-busy", () => {
+    guesses.classList.add("loading");
+    guesses.innerHTML = gameDisplay.makeLoadingHTML("busy");
+});
+
+socket.on("waiting", () => {
+    guesses.classList.add("loading");
+    guesses.innerHTML = gameDisplay.makeLoadingHTML("waiting");
 });
 
 // Other Event Handlers
