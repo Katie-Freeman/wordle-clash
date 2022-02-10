@@ -16,10 +16,10 @@ const registerWordleHandlers = require("./socket/registerWordleHandlers");
 const PORT = process.env.PORT || 3000;
 
 app.engine(
-    "hbs",
-    hbs.express4({
-        partialsDir: __dirname + "/views/partials",
-    })
+  "hbs",
+  hbs.express4({
+    partialsDir: __dirname + "/views/partials",
+  })
 );
 app.set("views", "./views");
 app.set("view engine", "hbs");
@@ -30,13 +30,14 @@ app.use(express.urlencoded({ extended: true }));
 const io = IO.of("/wordle");
 io.connectedUsers = [];
 io.usersLookingForMatch = [];
+
 io.use((socket, next) => {
     // grants access to session within io handlers
     sessionMiddleware(socket.request, {}, next);
 });
 
 app.use("/profile", profileRoutes);
-app.use("/dbtest", dbtestRoutes);
+app.use("/dbtest", dbtestRoutes); //NOTE: for test
 app.use("/user", userRoutes);
 app.use("/", indexRoutes);
 app.use(express.static("public"));
@@ -47,5 +48,5 @@ io.on("connection", (socket) => {
 });
 
 http.listen(PORT, () => {
-    console.log(`Wordle Clash has started on ${PORT}`);
+  console.log(`Wordle Clash has started on ${PORT}`);
 });

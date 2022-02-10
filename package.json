@@ -1,26 +1,26 @@
 {
-    "name": "wordle-clash",
-    "version": "1.0.0",
-    "description": "",
-    "main": "app.js",
-    "scripts": {
-        "start": "node app.js",
-        "dev": "nodemon app.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "ajv": "^8.10.0",
-        "bcrypt": "^5.0.1",
-        "connect-sqlite3": "^0.9.13",
-        "cors": "^2.8.5",
-        "express": "^4.17.2",
-        "express-hbs": "^2.4.0",
-        "express-session": "^1.17.2",
-        "handlebars": "^4.7.7",
-        "pg": "^8.7.3",
-        "sequelize": "^6.16.0",
-        "socket.io": "^4.4.1"
-    }
+  "name": "wordle-clash",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^8.10.0",
+    "bcrypt": "^5.0.1",
+    "connect-sqlite3": "^0.9.13",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "express-hbs": "^2.4.0",
+    "express-session": "^1.17.2",
+    "handlebars": "^4.7.7",
+    "pg": "^8.7.3",
+    "sequelize": "^6.16.0",
+    "socket.io": "^4.4.1"
+  }
 }
