@@ -30,6 +30,16 @@
   color: #888;
 }
 
+#welcomeUser {
+  color: green;
+  background: white;
+  padding-top: 14px;
+  padding-bottom: 6px;
+  vertical-align: middle;
+  border: none;
+  font-size: 16px;
+}
+
 .navbar .nav .btn-primary,
 .navbar .nav .btn-primary:active {
   color: black;
@@ -147,6 +157,10 @@
     background: transparent;
     border: none;
   }
+
+  .navbar .nav {
+    float: none;
+  }
   .navbar .form-inline {
     display: block;
   }
@@ -154,7 +168,8 @@
     width: 100%;
   }
   .navbar .nav .btn-primary,
-  .navbar .nav .btn-primary:active {
+  .navbar .nav .btn-primary:active,
+  #welcomeUser {
     display: block;
     z-index: 1;
   }
