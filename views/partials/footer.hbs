@@ -14,17 +14,3 @@
 		e.stopPropagation();
 	});
 </script>
-<script>
-	const registerPassword = document.getElementById("registerPassword");
-	const confirmPassword = document.getElementById("confirmPassword");
-	const submitBtn = document.getElementById("submitBtn");
-
-	var check = function () {
-		if (registerPassword.value == confirmPassword.value) {
-			submitBtn.disabled = false;
-		} else {
-			submitBtn.disabled = true;
-		}
-	}
-
-</script>
