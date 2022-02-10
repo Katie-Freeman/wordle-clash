@@ -21,13 +21,18 @@ Users without an account can experience the solo, single-player version. To enab
 This app utilizes Socket.IO for the majority of the game logic. The secret word is stored in server memory on each game session and not accessible to the user until the word is guessed or 6 guesses have been submitted. When a user submits a guess, the server processes the guess and sends in real-time to all users in the session whether each letter is in-place, out-of-place, or not in the secret word (without information on the letters submitted).
 
 On match-play, the server waits until both players have completed (by either correctly guessing the word or guessing incorrectly 6 times) to determine the winner of the match, the priorities to determine the winner of a match are as follows:
+
 **Both players guess the word correctly**
 
 1. The player with the least amount of guess to the correct word.
 2. The player that guesses the correct word earlier.
-   **One player guesses the word**
+
+**One player guesses the word**
+
 3. The player the guesses the word.
-   **Neither player guesses the word**
+
+**Neither player guesses the word**
+
 4. The player with the most letters in the correct spot on the final guess.
 5. The player with the most letters from the secret word on the final guess.
 6. The player that completes the guesses earlier.
