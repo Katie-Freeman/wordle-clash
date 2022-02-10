@@ -53,7 +53,7 @@ PostgreSQL using Sequelize ORM
 
 ## External Resources:
 
-Word list from [Word Game Dictionary] (https://www.wordgamedictionary.com/word-lists/)
+Word list from [Word Game Dictionary](https://www.wordgamedictionary.com/word-lists/)
 
 ## This site was built by
 
