@@ -3,6 +3,11 @@
   font-weight: normal;
   font-size: 13px;
 }
+.form-control:focus {
+  border-color: gray;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
 .navbar {
   background: #fff;
   padding-left: 16px;
@@ -11,17 +16,10 @@
   border-radius: 0;
 }
 
-.navbar .navbar-brand,
-.navbar .navbar-brand:hover,
-.navbar .navbar-brand:focus {
-  padding-left: 0;
-  font-size: 20px;
-  padding-right: 50px;
+.navbar .nav {
+  float: right;
 }
-/* .navbar .navbar-brand b {
-  font-weight: bold;
-  color: greenyellow;
-} */
+
 .navbar .form-inline {
   display: inline-block;
 }
@@ -34,8 +32,8 @@
 
 .navbar .nav .btn-primary,
 .navbar .nav .btn-primary:active {
-  color: gray;
-  background-color: white;
+  color: black;
+  background: white;
   padding-top: 8px;
   padding-bottom: 6px;
   vertical-align: middle;
@@ -43,13 +41,13 @@
 }
 .navbar .nav .btn-primary:hover,
 .navbar .nav .btn-primary:focus {
-  color: rgb(92, 91, 91);
+  color: black;
   outline: none;
-  background: white;
+  background: rgb(235, 233, 233);
 }
-.navbar .navbar-right li:first-child a {
+/* .navbar .navbar-right li:first-child a {
   padding-right: 30px;
-}
+} */
 .navbar ul li i {
   font-size: 18px;
 }
@@ -67,8 +65,8 @@
   margin-bottom: 8px;
 }
 .navbar ul.nav li.open > a.get-started-btn {
-  color: gray;
-  background: white !important;
+  color: #fff;
+  background: lightgray !important;
 }
 .navbar .dropdown-menu {
   border-radius: 1px;
@@ -91,12 +89,12 @@
 .navbar .dropdown-menu.form-wrapper {
   width: 280px;
   padding: 20px;
-  left: auto;
-  right: 0;
+  left: 0;
+  right: auto;
   font-size: 14px;
 }
 .navbar .dropdown-menu.form-wrapper a {
-  color: gray;
+  color: lightgray;
   padding: 0 !important;
 }
 .navbar .dropdown-menu.form-wrapper a:hover {
@@ -121,11 +119,6 @@
   text-decoration: none;
 }
 
-.navbar .form-wrapper .form-footer {
-  text-align: center;
-  padding-top: 10px;
-  font-size: 13px;
-}
 .navbar .form-wrapper .form-footer a:hover {
   text-decoration: underline;
 }
@@ -140,10 +133,6 @@
   display: none;
 }
 
-/*
-	media queries
-*/
-
 @media (min-width: 1200px) {
   .form-inline .input-group {
     width: 300px;
@@ -153,6 +142,7 @@
 @media (max-width: 768px) {
   .navbar .dropdown-menu.form-wrapper {
     width: 100%;
+
     padding: 10px 15px;
     background: transparent;
     border: none;
@@ -160,14 +150,12 @@
   .navbar .form-inline {
     display: block;
   }
-  .navbar .input-group,
-  .form-control {
+  .navbar .input-group {
     width: 100%;
-    background-color: white;
   }
   .navbar .nav .btn-primary,
-  .navbar .nav .btn-primary:active,
-  .navbar-right {
+  .navbar .nav .btn-primary:active {
     display: block;
+    z-index: 1;
   }
 }
