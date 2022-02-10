@@ -2,7 +2,7 @@
 
 ## **Purpose of the app:**
 
-Gives the popular single-player game Wordle a competitive twist.
+Gives the popular single-player game [Wordle](https://www.nytimes.com/games/wordle/index.html) a competitive twist.
 
 ## **How to use:**
 
