@@ -249,6 +249,16 @@
     background-color: #333;
 }
 
+#status {
+    display: flex;
+    column-gap: 1.5em;
+}
+
+.opponent-guess-letter {
+    padding: 5px;
+    color: rgba(0, 0, 0, 0);
+}
+
 #hideCount {
     display: none;
 }

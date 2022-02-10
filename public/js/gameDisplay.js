@@ -20,9 +20,43 @@ const getLoadingMessage = (status) => {
         loading: "We're setting up your match!",
         busy: "Player is in another match! Please try again later.",
         waiting: "Searching for player to match with...",
+        disconnect: "Your opponent disconnected",
+        rejected: "The player has declined your match invitation.",
     };
 
     return statusToMessageMap[status];
+};
+
+const makeFreshStatusBoxHTML = (opponent) => {
+    const titleText = opponent ? opponent : "Solo";
+    return `
+        <b>${titleText}</b>
+    `;
+};
+
+const makeOpponentGuessHTML = (count, results) => {
+    const resultItems = results.map(
+        (result) => `
+        <span class="opponent-guess-letter ${getResultClass(result)}">.</span>
+    `
+    );
+
+    return `<div class="opponent-guess">${count} - ${resultItems.join(
+        ""
+    )}</div>`;
+};
+
+const makeOpponentFinalStatusHTML = (count) => {
+    let finalText = "";
+    if (count) {
+        finalText += `Correctly guessed in ${count} turn${
+            count > 1 ? "s" : ""
+        }`;
+    } else {
+        finalText += "Did not guess the word";
+    }
+
+    return `<div class="opponent-result">[${finalText}]</div>`;
 };
 
 const makeGuessLetterBoxes = (count) => {
@@ -98,7 +132,7 @@ const displayWarningBox = (message) => {
     setTimeout(() => document.body.removeChild(warning), 850);
 };
 
-const displayInviteBox = (user, letterCount) => {
+const displayInviteBox = (user, letterCount, yesHandler, noHandler) => {
     const newGame = document.createElement("div");
     newGame.id = "newGame";
     newGame.className = "game-popup";
@@ -110,6 +144,12 @@ const displayInviteBox = (user, letterCount) => {
             <button class="btn btn-danger">No</button>
         </div>
     `;
+    const yesBtn = newGame.querySelector(".btn-success");
+    const noBtn = newGame.querySelector(".btn-danger");
+
+    yesBtn.addEventListener("click", yesHandler);
+    noBtn.addEventListener("click", noHandler);
+
     document.body.appendChild(newGame);
     setTimeout(() => newGame.classList.add("active"), 1);
 };
@@ -249,6 +289,9 @@ export default {
     getResultClass,
     makeGuessLetterBoxes,
     makeLoadingHTML,
+    makeFreshStatusBoxHTML,
+    makeOpponentGuessHTML,
+    makeOpponentFinalStatusHTML,
     makeNewKeyboardHTML,
     displayWarningBox,
     displayInviteBox,
