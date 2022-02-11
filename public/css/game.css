@@ -15,6 +15,7 @@
 }
 #warning {
     background-color: var(--color-bg);
+    color: var(--color-font);
     padding: 1em;
     width: 184px;
     text-align: center;
