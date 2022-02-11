@@ -10,53 +10,54 @@
 }
 
 .hr {
-  border: 1px solid var(--color-secondary);
-  width: 100%;
+    border: 1px solid var(--color-secondary);
+    width: 100%;
 }
 #warning {
-  background-color: var(--color-bg);
-  padding: 1em;
-  width: 184px;
-  text-align: center;
-  position: absolute;
-  top: 2em;
-  opacity: 0;
-  left: calc(50% - 92px);
-  border-radius: 20px;
-  transition: 0.2s ease-in;
+    background-color: var(--color-bg);
+    padding: 1em;
+    width: 184px;
+    text-align: center;
+    position: absolute;
+    top: 2em;
+    opacity: 0;
+    left: calc(50% - 92px);
+    border-radius: 20px;
+    transition: 0.2s ease-in;
 }
 
 #warning.active {
-  top: 6em;
-  opacity: 1;
-  z-index: 2;
+    top: 6em;
+    opacity: 1;
+    z-index: 2;
 }
 
 .game-popup {
-  background-color: var(--color-bg);
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.6em;
-  padding: 1em;
-  width: 300px;
-  text-align: center;
-  position: absolute;
-  top: 3em;
-  opacity: 0;
-  left: calc(50% - 150px);
-  border-radius: 30px;
-  box-shadow: 2px 2px 15px goldenrod;
+    background-color: var(--color-bg);
+    color: var(--color-font);
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.6em;
+    padding: 1em;
+    width: 300px;
+    text-align: center;
+    position: absolute;
+    top: 3em;
+    opacity: 0;
+    left: calc(50% - 150px);
+    border-radius: 30px;
+    box-shadow: 2px 2px 15px goldenrod;
 }
 
 .game-popup.active {
-  transition: 0.2s ease-in;
-  top: 6em;
-  opacity: 1;
-  z-index: 2;
+    transition: 0.2s ease-in;
+    top: 6em;
+    opacity: 1;
+    z-index: 2;
 }
 
 #result {
-  height: 300px;
+    height: 300px;
 }
 
 #result.match {
@@ -66,13 +67,13 @@
 }
 
 .gameButtons {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 #solo,
 #match {
-  background-color: var(--color-correct);
-  border: var(--color-correct);
+    background-color: var(--color-correct);
+    border: var(--color-correct);
 }
 
 .secret {
@@ -86,69 +87,69 @@
 }
 
 #gameContainer {
-  flex-direction: column;
-  background-color: var(--color-bg);
-  max-width: 800px;
-  height: calc(100vh - 135px);
-  height: calc(var(--vh, 1vh) * 100 - 135px);
-  margin: 0 auto;
-  color: var(--color-font);
-  font-family: "Overpass Mono", monospace;
-  font-weight: 700;
+    flex-direction: column;
+    background-color: var(--color-bg);
+    max-width: 800px;
+    height: calc(100vh - 135px);
+    height: calc(var(--vh, 1vh) * 100 - 135px);
+    margin: 0 auto;
+    color: var(--color-font);
+    font-family: "Overpass Mono", monospace;
+    font-weight: 700;
 }
 
 #controls {
-  padding: 1em 1em 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+    padding: 1em 1em 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 #controls i:hover {
-  color: var(--color-highlight);
-  cursor: pointer;
+    color: var(--color-highlight);
+    cursor: pointer;
 }
 
 #controls i:active {
-  color: var(--color-font);
+    color: var(--color-font);
 }
 
 #guesses {
-  flex-direction: column;
-  row-gap: 0.7em;
-  background-color: var(--color-bg);
-  padding: 0 1em 1em;
-  max-height: var(--max, 100vh);
-  overflow-y: auto;
+    flex-direction: column;
+    row-gap: 0.7em;
+    background-color: var(--color-bg);
+    padding: 0 1em 1em;
+    max-height: var(--max, 100vh);
+    overflow-y: auto;
 }
 
 #guesses.loading {
-  justify-content: center;
-  row-gap: 2em;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+    justify-content: center;
+    row-gap: 2em;
+    align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 #match-pending {
-  width: 90%;
-  max-width: 600px;
-  text-align: center;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
 }
 
 .progress {
-  margin-top: 2em;
+    margin-top: 2em;
 }
 
 .progress-bar.loading {
-  width: 100%;
-  animation: 0.6s linear infinite progress-bar;
+    width: 100%;
+    animation: 0.6s linear infinite progress-bar;
 }
 
 @keyframes progress-bar {
-  0% {
-    background-position-x: 40px;
-  }
+    0% {
+        background-position-x: 40px;
+    }
 }
 
 .guess-row {
@@ -157,21 +158,21 @@
 }
 
 .guess-row.active {
-  background-color: var(--color-highlight);
+    background-color: var(--color-highlight);
 }
 
 .guess-letter {
-  background-color: var(--color-bg);
-  /* padding: 12px 24px; */
-  padding: 8px 14px;
-  width: 44px;
-  height: 46px;
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: normal;
-  border: 1px solid var(--color-font);
-  transition: background-color 0.5s ease-in;
+    background-color: var(--color-bg);
+    /* padding: 12px 24px; */
+    padding: 8px 14px;
+    width: 44px;
+    height: 46px;
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: normal;
+    border: 1px solid var(--color-font);
+    transition: background-color 0.5s ease-in;
 }
 
 .flip {
@@ -222,11 +223,11 @@
 }
 
 #keyboard {
-  background-color: var(--color-bg);
-  flex-direction: column;
-  margin-top: auto;
-  padding: 1em;
-  row-gap: 8px;
+    background-color: var(--color-bg);
+    flex-direction: column;
+    margin-top: auto;
+    padding: 1em;
+    row-gap: 8px;
 }
 
 .keyboard-row {
@@ -235,13 +236,13 @@
 }
 
 .key {
-  background-color: var(--color-secondary);
-  padding: 0.5em 0.5em 0.25em;
-  cursor: pointer;
+    background-color: var(--color-secondary);
+    padding: 0.5em 0.5em 0.25em;
+    cursor: pointer;
 }
 
 .key:active {
-  background-color: var(--color-highlight);
+    background-color: var(--color-highlight);
 }
 
 .guess-letter,
@@ -250,15 +251,15 @@
 }
 
 .correct {
-  background-color: var(--color-correct);
+    background-color: var(--color-correct);
 }
 
 .wrong-placement {
-  background-color: var(--color-out);
+    background-color: var(--color-out);
 }
 
 .not-in-word {
-  background-color: var(--color-highlight);
+    background-color: var(--color-highlight);
 }
 
 #status {

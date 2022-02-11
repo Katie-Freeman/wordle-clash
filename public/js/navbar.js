@@ -1,16 +1,26 @@
+const checkbox = document.getElementById("checkbox");
+
 const toggleDarkMode = () => {
-  const checkbox = document.getElementById("checkbox");
-  const isChecked = checkbox.checked;
+    const isChecked = checkbox.checked;
 
-  const link = document.createElement("link");
+    localStorage.setItem("darkmode", isChecked ? "true" : "");
 
-  link.type = "text/css";
-  link.rel = "stylesheet";
-  link.href = "/css/darkmode.css";
-  if (isChecked) {
-    document.head.appendChild(link);
-  } else {
-    const sheet = document.querySelector("link[href='/css/darkmode.css']");
-    document.head.removeChild(sheet);
-  }
+    const link = document.createElement("link");
+
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = "/css/darkmode.css";
+    if (isChecked) {
+        document.head.appendChild(link);
+    } else {
+        const sheet = document.querySelector("link[href='/css/darkmode.css']");
+        document.head.removeChild(sheet);
+    }
 };
+
+const darkModeFromStorage = localStorage.getItem("darkmode");
+
+if (darkModeFromStorage) {
+    checkbox.checked = true;
+    toggleDarkMode();
+}

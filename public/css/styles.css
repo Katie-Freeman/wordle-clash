@@ -1,67 +1,73 @@
 @import url("colors.css");
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: "Varela Round", sans-serif;
-  padding: 0;
-  margin: 0;
-  transition: background 0.2s linear;
-  background-color: var(--color-bg);
+    font-family: "Varela Round", sans-serif;
+    padding: 0;
+    margin: 0;
+    transition: background 0.2s linear;
+    background-color: var(--color-bg);
 }
 
 #footer {
-  text-align: center;
-  margin-top: 20px;
-  padding: 5px;
-  background-color: var(--color-bg);
-  box-shadow: -2px 0px 10px rgba(10, 10, 10, 0.6);
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px;
+    background-color: var(--color-bg);
+    box-shadow: -2px 0px 10px rgba(10, 10, 10, 0.6);
 }
 
 .github-container {
-  margin: 0 auto;
+    margin: 0 auto;
 }
 
 .checkbox {
-  opacity: 0;
+    opacity: 0;
+}
+
+#darkmode {
+    position: relative;
+    left: 60px;
+    bottom: 5px;
 }
 
 .label {
-  background-color: #111;
-  border-radius: 50px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px;
-  position: relative;
-  height: 19px;
-  width: 40px;
-  transform: scale(1.5);
+    background-color: #111;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    position: relative;
+    height: 19px;
+    width: 40px;
+    transform: scale(1.5);
 }
 
 .label .ball {
-  background-color: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  height: 15px;
-  width: 15px;
-  transform: translateX(0px);
-  transition: transform 0.2s linear;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    height: 15px;
+    width: 15px;
+    transform: translateX(0px);
+    transition: transform 0.2s linear;
 }
 
 .checkbox:checked + .label .ball {
-  transform: translateX(24px);
+    transform: translateX(21px);
 }
 
 .fa-moon {
-  color: #f1c40f;
+    color: #f1c40f;
 }
 
 .fa-sun {
-  color: #f39c12;
+    color: #f39c12;
 }
