@@ -52,7 +52,7 @@
     vertical-align: middle;
     border: none;
     font-size: 16px;
-    margin-right: 2em;
+    text-align: center;
 }
 
 .navbar .nav .btn-primary,
@@ -70,9 +70,7 @@
     outline: none;
     background: var(--color-bg);
 }
-.navbar .navbar-right li:first-child a {
-    padding-right: 30px;
-}
+
 .navbar ul li i {
     font-size: 18px;
 }
@@ -148,6 +146,10 @@
     }
 }
 @media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+    }
+
     .navbar .dropdown-menu.form-wrapper {
         width: 100%;
         padding: 10px 15px;
@@ -171,10 +173,23 @@
     .navbar-header {
         width: 100%;
     }
+
+    .navbar-right {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 @media (min-width: 767px) {
     .navbar-header {
         margin-right: auto;
+    }
+
+    .navbar .navbar-right li:first-child a {
+        padding-right: 30px;
+    }
+
+    #welcome {
+        margin-right: 2em;
     }
 }
