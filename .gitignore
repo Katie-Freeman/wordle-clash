@@ -2,4 +2,4 @@
 .secret
 sessions
 .env
-congi
+config.json
