@@ -233,7 +233,7 @@ const setupClickHandlers = (
 
 const displaySelectOptions = () => {
     return `
-        <select id="numLettersSelect">
+        <select id="numLettersSelect" class="form-control">
             <option>4</option>
             <option>5</option>
             <option>6</option>
@@ -284,7 +284,7 @@ const displayMakeMatchBox = (matchHandler, inviteHandler) => {
             <hr class="hr">
             ${displaySelectOptions()}
             <h4>Invite a Friend</h4>
-            <input type="text" id="inviteName" placeholder="Username to invite">
+            <input type="text" id="inviteName" class="form-control" placeholder="Username to invite">
             <button id="invite" class="btn btn-info">Invite</button>
         </div>
     `;
