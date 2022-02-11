@@ -99,9 +99,18 @@ const displayLoading = (status) => {
 const updateAfterXMs = (ms, target, className) => {
     setTimeout(() => {
         target.classList.add(className, "flip");
-        keyboard.querySelector(
-            `#${target.innerHTML}`
-        ).className = `key ${className}`;
+        const virtualKey = keyboard.querySelector(`#${target.innerHTML}`);
+
+        // virtual keyboard should not go backward in progression.
+        if (
+            virtualKey.classList.contains("correct") ||
+            (virtualKey.classList.contains("wrong-placement") &&
+                className === "not-in-word")
+        ) {
+            return;
+        }
+
+        virtualKey.className = `key ${className}`;
     }, ms);
 };
 
