@@ -67,7 +67,7 @@ body {
   margin-top: 140px;
 }
 
-#gamePlayed {
+.gamePlayed {
   font-size: 28px;
   color: firebrick;
 }
@@ -90,4 +90,11 @@ body {
 
 #multiStats {
   display: none;
+}
+
+#labelTotalMulti {
+  display: none;
+  position: absolute;
+  width: 100%;
+  margin-top: 140px;
 }

@@ -143,9 +143,15 @@
             </div>
 
             <div id="statGraph">
-                <div id="labelTotal">total <br> Games: <br>
-                    <span id="gamePlayed"> {{userProfile.solo.total.all}}</span>
+
+                <div id="labelTotal">Solo <br> Games: <br>
+                    <span class="gamePlayed"> {{userProfile.solo.total.all}}</span>
                 </div>
+
+                <div id="labelTotalMulti"> Multiplayer <br> Games: <br>
+                    <span class="gamePlayed"> {{userProfile.multi.total.all}}</span>
+                </div>
+
                 <canvas id="myChart">
                     {{!-- JS insert --}}
                 </canvas>
@@ -161,6 +167,7 @@
             {{>footer}}
         </footer>
     </body>
+
 
 
 </html>
