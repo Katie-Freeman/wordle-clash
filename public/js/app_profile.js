@@ -11,7 +11,7 @@ const data = {
     {
       label: "My First Dataset",
       data: [chartWin.value, chartLoss.value],
-      backgroundColor: ["rgb(157, 177, 113)", "rgb(176, 81, 75)"],
+      backgroundColor: ["rgb(0, 128, 0)", "rgb(211,211,6)"],
       hoverOffset: 4,
     },
   ],
