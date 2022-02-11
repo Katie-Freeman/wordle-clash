@@ -82,12 +82,16 @@ const handleMatchFromPopup = () => {
     );
 };
 
-const displayResult = (secretWord) => {
+const displayResult = (secretWord, matchDetails) => {
+    const handlers = {
+        soloHandler: handleNewSoloGameFromPopup,
+        matchHandler: handleMatchFromPopup,
+    };
     gameDisplay.displayResultsBox(
         user,
         secretWord.toUpperCase(),
-        handleNewSoloGameFromPopup,
-        handleMatchFromPopup
+        handlers,
+        matchDetails
     );
 };
 
@@ -214,7 +218,8 @@ socket.on("word-guessed-waiting", () => {
 });
 
 socket.on("match-result", (data) => {
-    alert(data.winner);
+    const { secretWord, ...matchResult } = data;
+    displayResult(secretWord, matchResult);
 });
 
 socket.on("unable-to-match", (data) => {
@@ -259,9 +264,9 @@ socket.on("match-request", (data) => {
 socket.on("opponent-guess-results", (data) => {
     const { results, count, username } = data;
     if (username !== user.name) {
-        status.insertAdjacentHTML(
-            "beforeend",
-            gameDisplay.makeOpponentGuessHTML(count, results)
+        status.lastElementChild.innerHTML = gameDisplay.makeOpponentGuessHTML(
+            count,
+            results
         );
     }
 });

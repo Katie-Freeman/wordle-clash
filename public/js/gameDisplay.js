@@ -28,9 +28,9 @@ const getLoadingMessage = (status) => {
 };
 
 const makeFreshStatusBoxHTML = (opponent) => {
-    const titleText = opponent ? opponent : "Solo";
+    const titleText = opponent ? `${opponent}:` : "Solo Game";
     return `
-        <b>${titleText}</b>
+        <b>${titleText}</b><div class="opponent-guess"></div>
     `;
 };
 
@@ -41,9 +41,7 @@ const makeOpponentGuessHTML = (count, results) => {
     `
     );
 
-    return `<div class="opponent-guess">${count} - ${resultItems.join(
-        ""
-    )}</div>`;
+    return `${count} - ${resultItems.join("")}`;
 };
 
 const makeOpponentFinalStatusHTML = (count) => {
@@ -78,6 +76,35 @@ const makeLoadingHTML = (status = "loading") => {
                     class="progress-bar progress-bar-striped progress-bar-animated loading"
                     role="progressbar"
                 ></div>
+            </div>
+        </div>
+    `;
+};
+
+const makeMatchResultHTML = (matchResult, wordLength) => {
+    const { stats, winner } = matchResult;
+    const statItems = stats.map((stat) => {
+        const lastGuessArray = stat.wordGuessed
+            ? new Array(wordLength).fill("in-place")
+            : stat.lastResult;
+
+        return `
+        <div class="stat">
+            <h4>${stat.name}</h4>
+            <p><i>${stat.guessCount} guesses</i><p>
+            <p><b>Word Guessed: ${stat.wordGuessed ? "YES" : "NO"}</b></p>
+            <p>Last Guess Result:</p>
+            <div>
+                ${makeOpponentGuessHTML(0, lastGuessArray).substring(3)}
+            </div>
+        </div>
+    `;
+    });
+    return `
+        <div class="match-result">
+            <h3>Winner: ${winner}</h3>
+            <div class="match-stats">
+                ${statItems.join("")}
             </div>
         </div>
     `;
@@ -267,19 +294,24 @@ const displayMakeMatchBox = (matchHandler, inviteHandler) => {
     setTimeout(() => newMatch.classList.add("active"), 1);
 };
 
-const displayResultsBox = (user, secretWord, soloHandler, matchHandler) => {
+const displayResultsBox = (user, secretWord, handlers, matchResult) => {
     const result = document.createElement("div");
+    let matchInfo = "";
     result.id = "result";
     result.className = "game-popup";
+    if (matchResult) {
+        matchInfo = makeMatchResultHTML(matchResult, secretWord.length);
+        result.classList.add("match");
+    }
     result.innerHTML = `
         <i>Secret Word:</i>
         <h2 class="secret">${secretWord}</h2>
-        
+        ${matchInfo}
         <h3 id="again">Play Again?</h3>
         ${displayNewGameControls(user)}
     `;
 
-    setupClickHandlers(result, soloHandler, matchHandler);
+    setupClickHandlers(result, handlers.soloHandler, handlers.matchHandler);
     document.body.appendChild(result);
     setTimeout(() => result.classList.add("active"), 1);
 };

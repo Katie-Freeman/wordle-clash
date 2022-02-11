@@ -59,6 +59,15 @@ const registerWordleHandlers = (io, socket) => {
         };
     };
 
+    const trimStatObjectForDb = (stat) => {
+        return {
+            userId: stat.userId,
+            guessCount: stat.guessCount,
+            wordGuessed: stat.wordGuessed,
+            lastResult: stat.lastGuess,
+        };
+    };
+
     const processEndMatch = async () => {
         /*  
             if this socket is running this function, then opponent finished first
@@ -101,27 +110,38 @@ const registerWordleHandlers = (io, socket) => {
         const winnerId = userIsWinner ? socket.acctId : socket.opponent.acctId;
         const winner = userIsWinner ? socket.user : socket.opponent.user;
 
+        const userStatToSend = {
+            userId: socket.acctId,
+            name: socket.user,
+            guessCount: userStats.count,
+            wordGuessed: userStats.wordGuessed,
+            lastResult: userStats.lastGuess,
+            isFirstToComplete: false,
+        };
+
+        const opStatToSend = {
+            userId: socket.opponent.acctId,
+            name: socket.opponent.user,
+            guessCount: opStats.count,
+            wordGuessed: opStats.wordGuessed,
+            lastResult: opStats.lastGuess,
+            isFirstToComplete: true,
+        };
         const matchStat = models.MatchStat.build({
             winner: winnerId,
             letterCount: socket.numLetters,
             users: [
-                {
-                    userId: socket.acctId,
-                    guessCount: userStats.count,
-                    wordGuessed: userStats.wordGuessed,
-                    lastResult: userStats.lastGuess,
-                },
-                {
-                    userId: socket.opponent.acctId,
-                    guessCount: opStats.count,
-                    wordGuessed: opStats.wordGuessed,
-                    lastResult: opStats.lastGuess,
-                },
+                trimStatObjectForDb(userStatToSend),
+                trimStatObjectForDb(opStatToSend),
             ],
         });
 
         await matchStat.save();
-        io.to(socket.room).emit("match-result", { winner });
+        io.to(socket.room).emit("match-result", {
+            winner,
+            secretWord: socket.secretWord,
+            stats: [userStatToSend, opStatToSend],
+        });
     };
 
     const buildSoloStat = async (count, didWin) => {
@@ -151,12 +171,12 @@ const registerWordleHandlers = (io, socket) => {
                 await buildSoloStat(6, false);
                 resetMatchState();
             } else {
+                socket.emit("word-failed-waiting", {
+                    lastGuess: socket.stats.lastGuess,
+                });
+
                 if (isOpponentDone()) {
                     processEndMatch();
-                } else {
-                    socket.emit("word-failed-waiting", {
-                        lastGuess: socket.stats.lastGuess,
-                    });
                 }
 
                 socket
@@ -254,10 +274,10 @@ const registerWordleHandlers = (io, socket) => {
                     wordGuessed: true,
                     lastGuess: new Array(socket.numLetters).fill("in-place"),
                 };
+                socket.emit("word-guessed-waiting");
+
                 if (isOpponentDone()) {
                     processEndMatch();
-                } else {
-                    socket.emit("word-guessed-waiting");
                 }
 
                 io.to(socket.room).emit("opponent-guessed-word", {
