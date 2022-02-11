@@ -2,3 +2,4 @@
 .secret
 sessions
 config.json
+.env

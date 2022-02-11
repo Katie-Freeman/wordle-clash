@@ -32,8 +32,8 @@ io.connectedUsers = [];
 io.usersLookingForMatch = [];
 
 io.use((socket, next) => {
-    // grants access to session within io handlers
-    sessionMiddleware(socket.request, {}, next);
+  // grants access to session within io handlers
+  sessionMiddleware(socket.request, {}, next);
 });
 
 app.use("/profile", profileRoutes);
@@ -43,10 +43,14 @@ app.use("/", indexRoutes);
 app.use(express.static("public"));
 
 io.on("connection", (socket) => {
-    // Allows socket events to be handled in a separate file
-    registerWordleHandlers(io, socket);
+  // Allows socket events to be handled in a separate file
+  registerWordleHandlers(io, socket);
 });
 
 http.listen(PORT, () => {
   console.log(`Wordle Clash has started on ${PORT}`);
+});
+
+app.get("/instructions", (req, res) => {
+  res.render("instructions");
 });
