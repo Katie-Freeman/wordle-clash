@@ -285,6 +285,9 @@ const registerWordleHandlers = (io, socket) => {
                     count,
                 });
             }
+        } else {
+            resetMatchState();
+            socket.emit("correct-word");
         }
     };
 
@@ -386,6 +389,7 @@ const registerWordleHandlers = (io, socket) => {
                 initiateInvitationMatch(data.username);
                 break;
             default:
+                socket.gameMode = "solo";
                 startSoloGame();
         }
     });

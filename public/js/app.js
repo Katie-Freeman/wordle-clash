@@ -193,6 +193,7 @@ socket.on("invalid-guess", () => {
 });
 
 socket.on("correct-word", () => {
+    console.log("hi");
     processResults(new Array(numLetters).fill("in-place"));
     displayResult(currentGuessString);
     playing = false;
