@@ -4,12 +4,9 @@ const http = require("http").Server(app);
 const IO = require("socket.io")(http);
 const hbs = require("express-hbs");
 const userRoutes = require("./routes/user");
-const indexRoutes = require("./routes/index");
 const profileRoutes = require("./routes/profile");
-const dbtestRoutes = require("./routes/dbtest"); //NOTE for testing
 
 const sessionMiddleware = require("./middleware/sessionMiddleware");
-const authenticateMiddleware = require("./middleware/authenticateMiddleware");
 const resLocalsMiddleware = require("./middleware/resLocalsMiddleware");
 const registerWordleHandlers = require("./socket/registerWordleHandlers");
 
@@ -37,9 +34,7 @@ io.use((socket, next) => {
 });
 
 app.use("/profile", profileRoutes);
-app.use("/dbtest", dbtestRoutes); //NOTE: for test
 app.use("/user", userRoutes);
-app.use("/", indexRoutes);
 app.use(express.static("public"));
 
 io.on("connection", (socket) => {
@@ -47,10 +42,16 @@ io.on("connection", (socket) => {
   registerWordleHandlers(io, socket);
 });
 
-http.listen(PORT, () => {
-  console.log(`Wordle Clash has started on ${PORT}`);
+app.get("/", (req, res) => {
+  res.render("index");
 });
 
 app.get("/instructions", (req, res) => {
   res.render("instructions");
 });
+
+http.listen(PORT, () => {
+  console.log(`Wordle Clash has started on ${PORT}`);
+});
+
+

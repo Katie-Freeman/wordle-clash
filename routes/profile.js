@@ -2,20 +2,11 @@ const express = require("express");
 const router = express.Router();
 const models = require("../models");
 const { Op } = require("sequelize");
+const autheniticateMiddleware = require("../middleware/authenticateMiddleware");
 
-// let loginUser_id = 13;
 
-//  req.session.user = { userId: user.id, name: name };
-// router.get("/", (req, res) => {
-
-//   res.render("profile", { test });
-// });
-
-router.get("/", async (req, res, next) => {
+router.get("/", autheniticateMiddleware, async (req, res, next) => {
   const loginUser_id = req.session.user.userId;
-  console.log("===== loginUser_id ==== ");
-  console.log(loginUser_id);
-  console.log("==========");
 
   const user = await models.User.findOne({
     where: { id: loginUser_id },
@@ -34,7 +25,7 @@ router.get("/", async (req, res, next) => {
     },
   });
 
-  // const soloTotal = soloGames.length ? soloGames.length : 0;
+  
 
   const userProfile = {
     name: name,
@@ -156,7 +147,7 @@ router.get("/", async (req, res, next) => {
   userProfile.solo.w7.avrg != 0 && (userProfile.solo.w7.avrg = parseFloat((userProfile.solo.w7.avrg / userProfile.solo.w7.all).toFixed(2)));
   userProfile.solo.w8.avrg != 0 && (userProfile.solo.w8.avrg = parseFloat((userProfile.solo.w8.avrg / userProfile.solo.w8.all).toFixed(2)));
 
-  console.log("======= multiGames ========");
+  
 
   multiGames.forEach((e, i) => {
     userProfile.multi.total.all = i + 1;
@@ -213,7 +204,7 @@ router.get("/", async (req, res, next) => {
     (e.letterCount == 8) & (e.winner == loginUser_id) && (userProfile.multi.w8.win += 1);
     (e.letterCount == 8) & (e.winner != loginUser_id) && (userProfile.multi.w8.loss += 1);
 
-    // console.log(e.users);
+  
   });
   //calc averages:
   userProfile.multi.total.avrg != 0 && (userProfile.multi.total.avrg = parseFloat((userProfile.multi.total.avrg / userProfile.multi.total.all).toFixed(2)));
@@ -223,8 +214,6 @@ router.get("/", async (req, res, next) => {
   userProfile.multi.w7.avrg != 0 && (userProfile.multi.w7.avrg = parseFloat((userProfile.multi.w7.avrg / userProfile.multi.w7.all).toFixed(2)));
   userProfile.multi.w8.avrg != 0 && (userProfile.multi.w8.avrg = parseFloat((userProfile.multi.w8.avrg / userProfile.multi.w8.all).toFixed(2)));
 
-  console.log("===============");
-  console.log(userProfile);
 
   res.render("profile", { userProfile });
 });

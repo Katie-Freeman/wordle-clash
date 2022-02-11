@@ -2,7 +2,6 @@ import gameDisplay from "./gameDisplay.js";
 const socket = io("/wordle");
 const letterCountMeta = document.getElementById("letterCountMeta");
 const newGameLink = document.getElementById("newGameLink");
-const settingsLink = document.getElementById("settingsLink");
 const guesses = document.getElementById("guesses");
 const status = document.getElementById("status");
 const keyboard = document.getElementById("keyboard");
