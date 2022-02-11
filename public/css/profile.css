@@ -27,24 +27,31 @@ body {
   font-weight: bolder;
 }
 
-#statsTable {
+.statsTable {
   margin: auto;
   text-align: left;
 }
-#statsTable tr {
+.statsTable tr {
   height: 30px;
 }
-#statsTable td {
+.statsTable td {
   width: 40px;
 }
-#statsTable td:first-child {
+.statsTable td:first-child {
   width: 140px;
   text-align: right;
   padding-right: 20px;
   /* background-color: black; */
 }
 
-#statsTable td:nth-child(2) {
+.statsTable td:nth-child(2) {
+  color: firebrick;
+}
+.statsTable tr:first-child td:first-child {
+  padding: 0;
+  text-align: left;
+  font-weight: 600;
+  font-size: 20px;
   color: firebrick;
 }
 
@@ -63,6 +70,24 @@ body {
 #gamePlayed {
   font-size: 28px;
   color: firebrick;
-} /* #statsTable tr:first-child td:nth-child(2) {
-  color: inherit;
-} */ ;
+}
+
+#gameSelector {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+}
+#btnSolo,
+#btnMulti {
+  color: brown;
+  cursor: pointer;
+}
+#btnSolo:hover,
+#btnMulti:hover {
+  text-decoration: underline;
+}
+
+#multiStats {
+  display: none;
+}

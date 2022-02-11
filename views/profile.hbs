@@ -2,7 +2,7 @@
 <html lang="en">
 
     <head>
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <title>Profile</title>
         {{>header}}
     </head>
@@ -29,56 +29,117 @@
 
                 <input type="hidden" id="chartWin" value={{userProfile.solo.total.win}}>
                 <input type="hidden" id="chartLoss" value={{userProfile.solo.total.loss}}>
+                <input type="hidden" id="chartWinMulti" value={{userProfile.multi.total.win}}>
+                <input type="hidden" id="chartLossMulti" value={{userProfile.multi.total.loss}}>
 
             </div>
+            <div id="gameSelector">
+                <span id="btnSolo">Solo Game</span>
+                <input type="hidden" id="gameSolo" value={{userProfile.solo}}>
+                <span id="btnMulti">Multiplayer</span>
+                <input type="hidden" id="gameMulti" value="{{userProfile.solo}}">
+            </div>
             <div id="tableContainer">
-                <table id="statsTable">
-                    <tr>
-                        <td>Solo</td>
-                        <td>all</td>
-                        <td>4w</td>
-                        <td>5w</td>
-                        <td>6w</td>
-                        <td>7w</td>
-                        <td>8w</td>
-                    </tr>
-                    <tr>
-                        <td>played</td>
-                        <td>{{userProfile.solo.total.all}}</td>
-                        <td>{{userProfile.solo.w4.all}}</td>
-                        <td>{{userProfile.solo.w5.all}}</td>
-                        <td>{{userProfile.solo.w6.all}}</td>
-                        <td>{{userProfile.solo.w7.all}}</td>
-                        <td>{{userProfile.solo.w8.all}}</td>
-                    </tr>
-                    <tr>
-                        <td>won</td>
-                        <td>{{userProfile.solo.total.win}}</td>
-                        <td>{{userProfile.solo.w4.win}}</td>
-                        <td>{{userProfile.solo.w5.win}}</td>
-                        <td>{{userProfile.solo.w6.win}}</td>
-                        <td>{{userProfile.solo.w7.win}}</td>
-                        <td>{{userProfile.solo.w8.win}}</td>
-                    </tr>
-                    <tr>
-                        <td>loss</td>
-                        <td>{{userProfile.solo.total.loss}}</td>
-                        <td>{{userProfile.solo.w4.loss}}</td>
-                        <td>{{userProfile.solo.w5.loss}}</td>
-                        <td>{{userProfile.solo.w6.loss}}</td>
-                        <td>{{userProfile.solo.w7.loss}}</td>
-                        <td>{{userProfile.solo.w8.loss}}</td>
-                    </tr>
-                    <tr>
-                        <td>avrg attempts</td>
-                        <td>{{userProfile.solo.total.avrg}}</td>
-                        <td>{{userProfile.solo.w4.avrg}}</td>
-                        <td>{{userProfile.solo.w5.avrg}}</td>
-                        <td>{{userProfile.solo.w6.avrg}}</td>
-                        <td>{{userProfile.solo.w7.avrg}}</td>
-                        <td>{{userProfile.solo.w8.avrg}}</td>
-                    </tr>
-                </table>
+                <div id="soloStats">
+                    <table class="statsTable">
+                        <tr>
+                            <td>Solo</td>
+                            <td>all</td>
+                            <td>4w</td>
+                            <td>5w</td>
+                            <td>6w</td>
+                            <td>7w</td>
+                            <td>8w</td>
+                        </tr>
+                        <tr>
+                            <td>played</td>
+                            <td>{{userProfile.solo.total.all}}</td>
+                            <td>{{userProfile.solo.w4.all}}</td>
+                            <td>{{userProfile.solo.w5.all}}</td>
+                            <td>{{userProfile.solo.w6.all}}</td>
+                            <td>{{userProfile.solo.w7.all}}</td>
+                            <td>{{userProfile.solo.w8.all}}</td>
+                        </tr>
+                        <tr>
+                            <td>won</td>
+                            <td>{{userProfile.solo.total.win}}</td>
+                            <td>{{userProfile.solo.w4.win}}</td>
+                            <td>{{userProfile.solo.w5.win}}</td>
+                            <td>{{userProfile.solo.w6.win}}</td>
+                            <td>{{userProfile.solo.w7.win}}</td>
+                            <td>{{userProfile.solo.w8.win}}</td>
+                        </tr>
+                        <tr>
+                            <td>loss</td>
+                            <td>{{userProfile.solo.total.loss}}</td>
+                            <td>{{userProfile.solo.w4.loss}}</td>
+                            <td>{{userProfile.solo.w5.loss}}</td>
+                            <td>{{userProfile.solo.w6.loss}}</td>
+                            <td>{{userProfile.solo.w7.loss}}</td>
+                            <td>{{userProfile.solo.w8.loss}}</td>
+                        </tr>
+                        <tr>
+                            <td>avrg attempts</td>
+                            <td>{{userProfile.solo.total.avrg}}</td>
+                            <td>{{userProfile.solo.w4.avrg}}</td>
+                            <td>{{userProfile.solo.w5.avrg}}</td>
+                            <td>{{userProfile.solo.w6.avrg}}</td>
+                            <td>{{userProfile.solo.w7.avrg}}</td>
+                            <td>{{userProfile.solo.w8.avrg}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="multiStats">
+                    <table class="statsTable">
+                        <tr>
+                            <td>Multiplayer</td>
+                            <td>all</td>
+                            <td>4w</td>
+                            <td>5w</td>
+                            <td>6w</td>
+                            <td>7w</td>
+                            <td>8w</td>
+                        </tr>
+                        <tr>
+                            <td>played</td>
+                            <td>{{userProfile.multi.total.all}}</td>
+                            <td>{{userProfile.multi.w4.all}}</td>
+                            <td>{{userProfile.multi.w5.all}}</td>
+                            <td>{{userProfile.multi.w6.all}}</td>
+                            <td>{{userProfile.multi.w7.all}}</td>
+                            <td>{{userProfile.multi.w8.all}}</td>
+                        </tr>
+                        <tr>
+                            <td>won</td>
+                            <td>{{userProfile.multi.total.win}}</td>
+                            <td>{{userProfile.multi.w4.win}}</td>
+                            <td>{{userProfile.multi.w5.win}}</td>
+                            <td>{{userProfile.multi.w6.win}}</td>
+                            <td>{{userProfile.multi.w7.win}}</td>
+                            <td>{{userProfile.multi.w8.win}}</td>
+                        </tr>
+                        <tr>
+                            <td>loss</td>
+                            <td>{{userProfile.multi.total.loss}}</td>
+                            <td>{{userProfile.multi.w4.loss}}</td>
+                            <td>{{userProfile.multi.w5.loss}}</td>
+                            <td>{{userProfile.multi.w6.loss}}</td>
+                            <td>{{userProfile.multi.w7.loss}}</td>
+                            <td>{{userProfile.multi.w8.loss}}</td>
+                        </tr>
+                        <tr>
+                            <td>avrg attempts</td>
+                            <td>{{userProfile.multi.total.avrg}}</td>
+                            <td>{{userProfile.multi.w4.avrg}}</td>
+                            <td>{{userProfile.multi.w5.avrg}}</td>
+                            <td>{{userProfile.multi.w6.avrg}}</td>
+                            <td>{{userProfile.multi.w7.avrg}}</td>
+                            <td>{{userProfile.multi.w8.avrg}}</td>
+                        </tr>
+                    </table>
+                </div>
+
             </div>
 
             <div id="statGraph">
@@ -100,6 +161,6 @@
             {{>footer}}
         </footer>
     </body>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 </html>
