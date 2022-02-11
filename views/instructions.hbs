@@ -2,35 +2,53 @@
 <html lang="en">
 <head>
 {{>header}}
-    <title>Document</title>
+<link rel="stylesheet" href="/css/game.css"
+    <title>How to play</title>
 </head>
 <body>
    {{>navbar}}
-   
-<div class="container">
+
+<div class="container instructions">
     <div class="move-right">
         {{>settings}}
     </div>
-<h3>HOW TO PLAY</h3>
-<p>Guess the WORDLE in 6 tries.</p>
-<br>
-<p>Each guess must be a valid word. Hit the enter button to submit.</p>
-<br>
-<p>After each guess, the color of the tiles will change to show how close your guess was to the word.</p>
-<br>
-<p>Examples</p>
-<br>
-<img src="/images/instructions1.png">
-<br>
-<p>The letter S and E are in the word and in the correct spot.</p>
-<br>
-<img src="/images/instructions2.png">
-<br>  
-<p>The letter e is in the word but in the wrong spot.</p>
-<br>
-<img src="/images/instructions3.png">
-<br>
-<p>The letters are not in the word in any spot.</p>
+    <h3>HOW TO PLAY</h3>
+    <p>Guess the WORDLE in 6 tries.</p>
+    <p>All the game action takes place from the home page. Users may type letters using a physical keyboard while the game screen is selected (pressing the Enter key submits the guess), or by utilizing the custom keyboard along the bottom of the window. After the guess is submitted, the game will color code each letter in the guess:</p>
+    <br>
+    <p>Examples:</p>
+    <br>
+    <div class="guess-row instructions">
+        <h2 class="guess-letter not-in-word">w</h2>
+        <h2 class="guess-letter correct">e</h2>
+        <h2 class="guess-letter not-in-word">i</h2>
+        <h2 class="guess-letter not-in-word">r</h2>
+        <h2 class="guess-letter not-in-word">d</h2>
+    </div> 
+        <p>The letter E is in the word and in the correct spot.</p>
+        <br>
+    <div class="guess-row instructions">
+        <h2 class="guess-letter not-in-word">c</h2>
+        <h2 class="guess-letter not-in-word">h</h2>
+        <h2 class="guess-letter not-in-word">i</h2>
+        <h2 class="guess-letter not-in-word">m</h2>
+        <h2 class="guess-letter wrong-placement">e</h2>
+    </div>     
+        <p>The letter E is in the word but in the wrong spot.</p>
+        <br>
+        <div class="guess-row instructions">
+        <h2 class="guess-letter not-in-word">w</h2>
+        <h2 class="guess-letter not-in-word">r</h2>
+        <h2 class="guess-letter not-in-word">o</h2>
+        <h2 class="guess-letter not-in-word">n</h2>
+        <h2 class="guess-letter not-in-word">g</h2>
+    </div>
+        <p>The letters are not in the word in any spot.</p>
+        <br>
+        <p>The keyboard along the bottom of the screen will also indicate which letters have been used and the appropriate status.</p>
+        <br>
+        <p>Users without an account can experience the solo, single-player version. To enable match-play (up to 2 players at this time), and to save game stats, the user must log in or create an account.</p>
+
 </div>
 
 {{>footer}}
