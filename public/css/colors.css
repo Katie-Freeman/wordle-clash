@@ -1,0 +1,8 @@
+:root {
+  --color-bg: white;
+  --color-secondary: lightgray;
+  --color-highlight: darkgray;
+  --color-font: black;
+  --color-correct: green;
+  --color-out: rgb(211, 211, 6);
+}
