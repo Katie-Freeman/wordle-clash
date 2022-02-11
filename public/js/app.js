@@ -3,6 +3,7 @@ const socket = io("/wordle");
 const letterCountMeta = document.getElementById("letterCountMeta");
 const newGameLink = document.getElementById("newGameLink");
 const guesses = document.getElementById("guesses");
+const status = document.getElementById("status");
 const keyboard = document.getElementById("keyboard");
 
 const reLetters = /[a-zA-Z]/;
@@ -11,6 +12,7 @@ let currentGuessString = "";
 let numLetters = parseInt(letterCountMeta.content);
 let playing = false;
 let user;
+let opponent;
 let currentRow;
 
 const clearPopups = () => {
@@ -45,6 +47,7 @@ const setupNewGame = () => {
     guessCount = 0;
     currentGuessString = "";
     playing = true;
+    status.innerHTML = gameDisplay.makeFreshStatusBoxHTML(opponent);
     guesses.classList.remove("loading");
     guesses.innerHTML = gameDisplay.makeGuessLetterBoxes(numLetters);
     keyboard.innerHTML = gameDisplay.makeNewKeyboardHTML();
@@ -79,21 +82,39 @@ const handleMatchFromPopup = () => {
     );
 };
 
-const displayResult = (secretWord) => {
+const displayResult = (secretWord, matchDetails) => {
+    const handlers = {
+        soloHandler: handleNewSoloGameFromPopup,
+        matchHandler: handleMatchFromPopup,
+    };
     gameDisplay.displayResultsBox(
         user,
         secretWord.toUpperCase(),
-        handleNewSoloGameFromPopup,
-        handleMatchFromPopup
+        handlers,
+        matchDetails
     );
+};
+
+const displayLoading = (status) => {
+    guesses.classList.add("loading");
+    guesses.innerHTML = gameDisplay.makeLoadingHTML(status);
 };
 
 const updateAfterXMs = (ms, target, className) => {
     setTimeout(() => {
         target.classList.add(className, "flip");
-        keyboard.querySelector(
-            `#${target.innerHTML}`
-        ).className = `key ${className}`;
+        const virtualKey = keyboard.querySelector(`#${target.innerHTML}`);
+
+        // virtual keyboard should not go backward in progression.
+        if (
+            virtualKey.classList.contains("correct") ||
+            (virtualKey.classList.contains("wrong-placement") &&
+                className === "not-in-word")
+        ) {
+            return;
+        }
+
+        virtualKey.className = `key ${className}`;
     }, ms);
 };
 
@@ -135,6 +156,16 @@ const submitAnswer = () => {
     }
 };
 
+const processResults = (results) => {
+    results.forEach((result, i) => {
+        updateAfterXMs(
+            i * 50,
+            currentRow.children[i],
+            gameDisplay.getResultClass(result)
+        );
+    });
+};
+
 // socket handlers
 
 socket.on("connect", () => {
@@ -146,10 +177,10 @@ socket.on("user-info", (data) => {
 });
 
 socket.on("secret-word-ready", (data) => {
-    if (data.numLetters) {
+    if (data) {
         numLetters = data.numLetters;
+        opponent = data.name;
     }
-
     clearPopups();
     setupNewGame();
     setCurrentRow();
@@ -161,26 +192,34 @@ socket.on("invalid-guess", () => {
 });
 
 socket.on("correct-word", () => {
-    for (let i = 0; i < numLetters; i++) {
-        updateAfterXMs(i * 50, currentRow.children[i], "correct");
-    }
+    processResults(new Array(numLetters).fill("in-place"));
     displayResult(currentGuessString);
     playing = false;
 });
 
 socket.on("guess-results", (data) => {
-    data.results.forEach((result, i) => {
-        updateAfterXMs(
-            i * 50,
-            currentRow.children[i],
-            gameDisplay.getResultClass(result)
-        );
-    });
+    processResults(data.results);
     if (guessCount < 6) {
         setCurrentRow();
     } else {
+        playing = false;
         displayResult(data.secretWord);
     }
+});
+
+socket.on("word-failed-waiting", (data) => {
+    processResults(data.lastGuess);
+    playing = false;
+});
+
+socket.on("word-guessed-waiting", () => {
+    processResults(new Array(numLetters).fill("in-place"));
+    playing = false;
+});
+
+socket.on("match-result", (data) => {
+    const { secretWord, ...matchResult } = data;
+    displayResult(secretWord, matchResult);
 });
 
 socket.on("unable-to-match", (data) => {
@@ -188,18 +227,72 @@ socket.on("unable-to-match", (data) => {
 });
 
 socket.on("user-found", () => {
-    guesses.classList.add("loading");
-    guesses.innerHTML = gameDisplay.makeLoadingHTML();
+    displayLoading();
 });
 
 socket.on("user-busy", () => {
-    guesses.classList.add("loading");
-    guesses.innerHTML = gameDisplay.makeLoadingHTML("busy");
+    displayLoading("busy");
 });
 
 socket.on("waiting", () => {
-    guesses.classList.add("loading");
-    guesses.innerHTML = gameDisplay.makeLoadingHTML("waiting");
+    displayLoading("waiting");
+});
+
+socket.on("reject-request", () => {
+    displayLoading("rejected");
+});
+
+socket.on("match-request", (data) => {
+    const { username, numLetters } = data;
+    const handleYesClick = () => {
+        clearPopups();
+        socket.emit("accept-request", { username, numLetters });
+    };
+    const handleNoClick = () => {
+        clearPopups();
+        socket.emit("reject-request", { username });
+    };
+
+    gameDisplay.displayInviteBox(
+        username,
+        numLetters,
+        handleYesClick,
+        handleNoClick
+    );
+});
+
+socket.on("opponent-guess-results", (data) => {
+    const { results, count, username } = data;
+    if (username !== user.name) {
+        status.lastElementChild.innerHTML = gameDisplay.makeOpponentGuessHTML(
+            count,
+            results
+        );
+    }
+});
+
+socket.on("opponent-out", (data) => {
+    const { username } = data;
+    if (username !== user.name) {
+        status.insertAdjacentHTML(
+            "beforeend",
+            gameDisplay.makeOpponentFinalStatusHTML()
+        );
+    }
+});
+
+socket.on("opponent-guessed-word", (data) => {
+    const { username, count } = data;
+    if (username !== user.name) {
+        status.insertAdjacentHTML(
+            "beforeend",
+            gameDisplay.makeOpponentFinalStatusHTML(count)
+        );
+    }
+});
+
+socket.on("opponent-disconnected", () => {
+    displayLoading("disconnect");
 });
 
 // Other Event Handlers

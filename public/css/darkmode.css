@@ -1,0 +1,8 @@
+:root {
+  --color-bg: rgb(54, 54, 54);
+  --color-secondary: rgb(119, 118, 118);
+  --color-highlight: darkgray;
+  --color-font: white;
+  --color-correct: darkgreen;
+  --color-out: rgb(139, 139, 2);
+}

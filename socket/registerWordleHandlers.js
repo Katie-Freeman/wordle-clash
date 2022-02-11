@@ -4,7 +4,6 @@ const { Op } = require("sequelize");
 
 const registerWordleHandlers = (io, socket) => {
     const { session } = socket.request;
-    let socketUser = {};
     let user;
 
     if (session) {
@@ -17,25 +16,142 @@ const registerWordleHandlers = (io, socket) => {
         if (session.user) {
             user = { name: session.user.name, id: socket.id };
             socket.user = user.name;
+            socket.acctId = session.user.userId;
             io.connectedUsers.push(user);
         }
         socketUser = session.socketUser;
         session.save();
     }
+    socket.gameMode = "solo";
     socket.inMatch = false;
     socket.opponent = null;
+    socket.stats = { count: 0, wordGuessed: false, lastGuess: null };
     socket.room = null;
 
     socket.emit("user-info", { user });
 
     const getSocketUser = (id) => {
-        return io.of("/wordle").sockets.get(id);
+        return io.sockets.get(id);
+    };
+
+    const isOpponentDone = () => {
+        const { stats } = socket.opponent;
+        return stats.count === 6 || stats.wordGuessed;
     };
 
     const resetMatchState = () => {
         socket.inMatch = false;
         socket.opponent = null;
         socket.room = null;
+        socket.stats = { count: 0, wordGuessed: false, lastGuess: null };
+    };
+
+    const processGuessCount = (lastGuess) => {
+        const inPlaceLetters = lastGuess.filter(
+            (guess) => guess === "in-place"
+        );
+        const lettersInWord = lastGuess.filter(
+            (guess) => guess !== "not-in-word"
+        );
+        return {
+            inPlace: inPlaceLetters.length,
+            inWord: lettersInWord.length,
+        };
+    };
+
+    const trimStatObjectForDb = (stat) => {
+        return {
+            userId: stat.userId,
+            guessCount: stat.guessCount,
+            wordGuessed: stat.wordGuessed,
+            lastResult: stat.lastGuess,
+        };
+    };
+
+    const processEndMatch = async () => {
+        /*  
+            if this socket is running this function, then opponent finished first
+            (triggered by noticing other player already finished when is finished)
+            1. winner is determined by fewest guesses to correct word,
+            2. followed by who guessed correctly first,
+            3. If only one user guesses correctly, that user wins
+            
+            If neither player guesses correctly:
+            1. Most in-place letters on last incorrect guess,
+            2. followed by most letters from word on last incorrect guess
+            3. if all the above are equal, opponent wins for reaching the end first
+        */
+
+        const userStats = socket.stats;
+        const opStats = socket.opponent.stats;
+        let userIsWinner;
+
+        if (userStats.wordGuessed && opStats.wordGuessed) {
+            // This socket has to have a lower count to win
+            // If the counts are the same, opponent wins due to guessing correctly first
+            userIsWinner = userStats.count < opStats.count ? true : false;
+        } else if (userStats.wordGuessed && !opStats.wordGuessed) {
+            userIsWinner = true;
+        } else if (opStats.wordGuessed && !userStats.wordGuessed) {
+            userIsWinner = false;
+        } else {
+            const userCounts = processGuessCount(userStats.lastGuess);
+            const opCounts = processGuessCount(opStats.lastGuess);
+
+            if (userCounts.inPlace === opCounts.inPlace) {
+                userIsWinner =
+                    userCounts.inWord > opCounts.inWord ? true : false;
+            } else {
+                userIsWinner =
+                    userCounts.inPlace > opCounts.inPlace ? true : false;
+            }
+        }
+
+        const winnerId = userIsWinner ? socket.acctId : socket.opponent.acctId;
+        const winner = userIsWinner ? socket.user : socket.opponent.user;
+
+        const userStatToSend = {
+            userId: socket.acctId,
+            name: socket.user,
+            guessCount: userStats.count,
+            wordGuessed: userStats.wordGuessed,
+            lastResult: userStats.lastGuess,
+            isFirstToComplete: false,
+        };
+
+        const opStatToSend = {
+            userId: socket.opponent.acctId,
+            name: socket.opponent.user,
+            guessCount: opStats.count,
+            wordGuessed: opStats.wordGuessed,
+            lastResult: opStats.lastGuess,
+            isFirstToComplete: true,
+        };
+        const matchStat = models.MatchStat.build({
+            winner: winnerId,
+            letterCount: socket.numLetters,
+            users: [
+                trimStatObjectForDb(userStatToSend),
+                trimStatObjectForDb(opStatToSend),
+            ],
+        });
+
+        await matchStat.save();
+        io.to(socket.room).emit("match-result", {
+            winner,
+            secretWord: socket.secretWord,
+            stats: [userStatToSend, opStatToSend],
+        });
+    };
+
+    const buildSoloStat = async (count, didWin) => {
+        const stat = models.SoloStat.build({
+            user_id: session.user.userId,
+            letterCount: socket.numLetters,
+            guesses: count,
+            win: didWin,
+        });
+        await stat.save();
     };
 
     const generateSecretWord = (numLetters) => {
@@ -51,16 +167,21 @@ const registerWordleHandlers = (io, socket) => {
 
     const handleLoss = async () => {
         if (session.user) {
-            if (socketUser.gameMode === "solo") {
-                const stat = models.SoloStat.build({
-                    user_id: session.user.userId,
-                    letterCount: socket.numLetters,
-                    guesses: 6,
-                    win: false,
+            if (socket.gameMode === "solo") {
+                await buildSoloStat(6, false);
+                resetMatchState();
+            } else {
+                socket.emit("word-failed-waiting", {
+                    lastGuess: socket.stats.lastGuess,
                 });
 
-                await stat.save();
-                resetMatchState();
+                if (isOpponentDone()) {
+                    processEndMatch();
+                }
+
+                socket
+                    .to(socket.room)
+                    .emit("opponent-out", { username: socket.user });
             }
         }
     };
@@ -116,48 +237,77 @@ const registerWordleHandlers = (io, socket) => {
             }
         }
         const socketData = { results };
+
+        if (socket.room) {
+            socket.stats = {
+                ...socket.stats,
+                count,
+                lastGuess: results,
+            };
+            io.to(socket.room).emit("opponent-guess-results", {
+                results,
+                count,
+                username: socket.user,
+            });
+        }
+
         if (count === 6) {
             socketData.secretWord = socket.secretWord;
             handleLoss();
         }
 
-        socket.emit("guess-results", socketData);
+        if (count < 6 || socket.gameMode === "solo") {
+            socket.emit("guess-results", socketData);
+        }
     };
 
     const handleWordGuessed = async (count) => {
         if (session.user) {
-            if (socketUser.gameMode === "solo") {
-                console.log(socket.numLetters);
-                const stat = models.SoloStat.build({
-                    user_id: session.user.userId,
-                    letterCount: socket.numLetters,
-                    guesses: count,
-                    win: true,
-                });
-                await stat.save();
+            if (socket.gameMode === "solo") {
+                await buildSoloStat(count, true);
                 resetMatchState();
+                socket.emit("correct-word");
+            } else {
+                socket.stats = {
+                    ...socket.stats,
+                    count,
+                    wordGuessed: true,
+                    lastGuess: new Array(socket.numLetters).fill("in-place"),
+                };
+                socket.emit("word-guessed-waiting");
+
+                if (isOpponentDone()) {
+                    processEndMatch();
+                }
+
+                io.to(socket.room).emit("opponent-guessed-word", {
+                    username: socket.user,
+                    count,
+                });
             }
         }
-        socket.emit("correct-word");
     };
 
     const startSoloGame = () => {
         socket.secretWord = generateSecretWord(socket.numLetters);
         socket.inMatch = false;
-        socket.emit("secret-word-ready", {});
+        socket.emit("secret-word-ready");
     };
 
-    const startMatchedGame = (opponent) => {
+    const startMatchedGame = (opponent, mode) => {
         socket.secretWord = generateSecretWord(socket.numLetters);
         opponent.secretWord = socket.secretWord;
         [socket, opponent].forEach((userSocket) => {
             userSocket.inMatch = true;
+            userSocket.gameMode = mode;
             userSocket.room = socket.user;
-
+            userSocket.numLetters = socket.numLetters;
             // Send self socket and opponent socket to room to emit shared messages from
-            userSocket.to(socket.user);
+            userSocket.join(socket.user);
         });
 
+        socket.opponent = opponent;
+        opponent.opponent = socket;
         opponent.emit("secret-word-ready", {
             name: socket.user,
             numLetters: socket.numLetters,
@@ -178,7 +328,7 @@ const registerWordleHandlers = (io, socket) => {
             );
             userSocket.emit("user-found");
             socket.emit("user-found");
-            startMatchedGame(userSocket);
+            startMatchedGame(userSocket, "match");
         } else {
             io.usersLookingForMatch.push(user);
             socket.emit("waiting");
@@ -196,6 +346,10 @@ const registerWordleHandlers = (io, socket) => {
                 socket.emit("user-busy");
             } else {
                 socket.emit("user-found");
+                userSocket.emit("match-request", {
+                    username: socket.user,
+                    numLetters: socket.numLetters,
+                });
             }
         } else {
             const user = await models.User.findOne({
@@ -216,11 +370,11 @@ const registerWordleHandlers = (io, socket) => {
     };
 
     socket.on("new-game", (data) => {
-        socketUser.gameMode = data.gameMode;
+        socket.gameMode = data.gameMode;
         socket.numLetters = parseInt(data.numLetters);
         session.lastLetterCount = socket.numLetters;
         session.save();
-        switch (socketUser.gameMode) {
+        switch (socket.gameMode) {
             case "solo":
                 startSoloGame();
                 break;
@@ -251,11 +405,35 @@ const registerWordleHandlers = (io, socket) => {
         }
     });
 
+    socket.on("accept-request", (data) => {
+        socket.numLetters = data.numLetters;
+        const targetUser = io.connectedUsers.find(
+            (user) => user.name === data.username
+        );
+        const userSocket = getSocketUser(targetUser.id);
+        startMatchedGame(userSocket, "invite");
+    });
+
+    socket.on("reject-request", (data) => {
+        const targetUser = io.connectedUsers.find(
+            (user) => user.name === data.username
+        );
+        const userSocket = getSocketUser(targetUser.id);
+        userSocket.emit("reject-request");
+    });
+
+    socket.on("confirm-disconnect", () => {
+        resetMatchState();
+    });
+
     socket.on("disconnect", () => {
         if (session.user) {
             io.connectedUsers = io.connectedUsers.filter(
                 (user) => user.name !== session.user.name
             );
+        }
+        if (socket.room) {
+            io.to(socket.room).emit("opponent-disconnected");
         }
     });
 };

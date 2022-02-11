@@ -20,9 +20,41 @@ const getLoadingMessage = (status) => {
         loading: "We're setting up your match!",
         busy: "Player is in another match! Please try again later.",
         waiting: "Searching for player to match with...",
+        disconnect: "Your opponent disconnected",
+        rejected: "The player has declined your match invitation.",
     };
 
     return statusToMessageMap[status];
+};
+
+const makeFreshStatusBoxHTML = (opponent) => {
+    const titleText = opponent ? `${opponent}:` : "Solo Game";
+    return `
+        <b>${titleText}</b><div class="opponent-guess"></div>
+    `;
+};
+
+const makeOpponentGuessHTML = (count, results) => {
+    const resultItems = results.map(
+        (result) => `
+        <span class="opponent-guess-letter ${getResultClass(result)}">.</span>
+    `
+    );
+
+    return `${count} - ${resultItems.join("")}`;
+};
+
+const makeOpponentFinalStatusHTML = (count) => {
+    let finalText = "";
+    if (count) {
+        finalText += `Correctly guessed in ${count} turn${
+            count > 1 ? "s" : ""
+        }`;
+    } else {
+        finalText += "Did not guess the word";
+    }
+
+    return `<div class="opponent-result">[${finalText}]</div>`;
 };
 
 const makeGuessLetterBoxes = (count) => {
@@ -44,6 +76,35 @@ const makeLoadingHTML = (status = "loading") => {
                     class="progress-bar progress-bar-striped progress-bar-animated loading"
                     role="progressbar"
                 ></div>
+            </div>
+        </div>
+    `;
+};
+
+const makeMatchResultHTML = (matchResult, wordLength) => {
+    const { stats, winner } = matchResult;
+    const statItems = stats.map((stat) => {
+        const lastGuessArray = stat.wordGuessed
+            ? new Array(wordLength).fill("in-place")
+            : stat.lastResult;
+
+        return `
+        <div class="stat">
+            <h4>${stat.name}</h4>
+            <p><i>${stat.guessCount} guesses</i><p>
+            <p><b>Word Guessed: ${stat.wordGuessed ? "YES" : "NO"}</b></p>
+            <p>Last Guess Result:</p>
+            <div>
+                ${makeOpponentGuessHTML(0, lastGuessArray).substring(3)}
+            </div>
+        </div>
+    `;
+    });
+    return `
+        <div class="match-result">
+            <h3>Winner: ${winner}</h3>
+            <div class="match-stats">
+                ${statItems.join("")}
             </div>
         </div>
     `;
@@ -98,7 +159,7 @@ const displayWarningBox = (message) => {
     setTimeout(() => document.body.removeChild(warning), 850);
 };
 
-const displayInviteBox = (user, letterCount) => {
+const displayInviteBox = (user, letterCount, yesHandler, noHandler) => {
     const newGame = document.createElement("div");
     newGame.id = "newGame";
     newGame.className = "game-popup";
@@ -110,6 +171,12 @@ const displayInviteBox = (user, letterCount) => {
             <button class="btn btn-danger">No</button>
         </div>
     `;
+    const yesBtn = newGame.querySelector(".btn-success");
+    const noBtn = newGame.querySelector(".btn-danger");
+
+    yesBtn.addEventListener("click", yesHandler);
+    noBtn.addEventListener("click", noHandler);
+
     document.body.appendChild(newGame);
     setTimeout(() => newGame.classList.add("active"), 1);
 };
@@ -227,19 +294,24 @@ const displayMakeMatchBox = (matchHandler, inviteHandler) => {
     setTimeout(() => newMatch.classList.add("active"), 1);
 };
 
-const displayResultsBox = (user, secretWord, soloHandler, matchHandler) => {
+const displayResultsBox = (user, secretWord, handlers, matchResult) => {
     const result = document.createElement("div");
+    let matchInfo = "";
     result.id = "result";
     result.className = "game-popup";
+    if (matchResult) {
+        matchInfo = makeMatchResultHTML(matchResult, secretWord.length);
+        result.classList.add("match");
+    }
     result.innerHTML = `
         <i>Secret Word:</i>
         <h2 class="secret">${secretWord}</h2>
-        
+        ${matchInfo}
         <h3 id="again">Play Again?</h3>
         ${displayNewGameControls(user)}
     `;
 
-    setupClickHandlers(result, soloHandler, matchHandler);
+    setupClickHandlers(result, handlers.soloHandler, handlers.matchHandler);
     document.body.appendChild(result);
     setTimeout(() => result.classList.add("active"), 1);
 };
@@ -249,6 +321,9 @@ export default {
     getResultClass,
     makeGuessLetterBoxes,
     makeLoadingHTML,
+    makeFreshStatusBoxHTML,
+    makeOpponentGuessHTML,
+    makeOpponentFinalStatusHTML,
     makeNewKeyboardHTML,
     displayWarningBox,
     displayInviteBox,

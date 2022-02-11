@@ -1,19 +1,24 @@
+@import url("colors.css");
 .form-control {
   box-shadow: none;
   font-weight: normal;
   font-size: 13px;
 }
+
 .form-control:focus {
-  border-color: gray;
+  border-color: var(--color-highlight);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar {
-  background: #fff;
+  background: var(--color-bg);
   padding-left: 16px;
   padding-right: 16px;
   border-bottom: 1px solid #dfe3e8;
   border-radius: 0;
+}
+
+.logo {
 }
 
 .navbar .nav {
@@ -28,23 +33,24 @@
   position: relative;
 }
 .navbar .nav li a {
-  color: #888;
+  color: var(--color-secondary);
 }
 
 #welcomeUser {
-  color: green;
-  background: white;
+  color: var(--color-correct);
+  background: var(--color-bg);
   padding-top: 14px;
   padding-bottom: 6px;
   vertical-align: middle;
   border: none;
   font-size: 16px;
+  margin-right: 2em;
 }
 
 .navbar .nav .btn-primary,
 .navbar .nav .btn-primary:active {
-  color: black;
-  background: white;
+  color: var(--color-font);
+  background: var(--color-bg);
   padding-top: 8px;
   padding-bottom: 6px;
   vertical-align: middle;
@@ -52,13 +58,13 @@
 }
 .navbar .nav .btn-primary:hover,
 .navbar .nav .btn-primary:focus {
-  color: black;
+  color: var(--color-font);
   outline: none;
-  background: rgb(235, 233, 233);
+  background: var(--color-bg);
 }
-/* .navbar .navbar-right li:first-child a {
+.navbar .navbar-right li:first-child a {
   padding-right: 30px;
-} */
+}
 .navbar ul li i {
   font-size: 18px;
 }
@@ -76,16 +82,16 @@
   margin-bottom: 8px;
 }
 .navbar ul.nav li.open > a.get-started-btn {
-  color: #fff;
-  background: lightgray !important;
+  color: var(--color-bg);
+  background: var(--color-highlight) !important;
 }
 .navbar .dropdown-menu {
   border-radius: 1px;
-  border-color: #e5e5e5;
+  border-color: var(--color-highlight);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 .navbar .nav .dropdown-menu li {
-  color: #999;
+  color: var(--color-highlight);
   font-weight: normal;
 }
 .navbar .nav .dropdown-menu li a,
@@ -104,7 +110,7 @@
   font-size: 14px;
 }
 .navbar .dropdown-menu.form-wrapper a {
-  color: lightgray;
+  color: var(--color-secondary);
   padding: 10px !important;
 }
 .navbar .dropdown-menu.form-wrapper a:hover {
