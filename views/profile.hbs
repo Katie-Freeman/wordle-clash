@@ -8,11 +8,12 @@
     </head>
 
     <body>
-        <header>
-            {{>navbar}}
-        </header>
+        {{>navbar}}
+        <div class="move-right">
+            {{>settings}}
+        </div>
         <div id="profileWrap">
-
+            
             <h3>Profile: </h3>
             <div id="infoWrap">
 
@@ -158,14 +159,9 @@
             </div>
 
         </div>
-
-
-
-
-
-        <footer>
-            {{>footer}}
-        </footer>
+        
+        {{>footer}}
+        
     </body>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
