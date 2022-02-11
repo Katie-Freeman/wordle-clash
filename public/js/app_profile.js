@@ -15,49 +15,58 @@ let loss = chartLoss.value;
 let myChart = displayChart(win, loss);
 
 btnMulti.addEventListener("click", () => {
-  soloStats.style.display = "none";
-  multiStats.style.display = "block";
-  labelTotal.style.display = "none";
-  labelTotalMulti.style.display = "block";
-  myChart.destroy();
-  myChart = displayChart(chartWinMulti.value, chartLossMulti.value);
-  // tableContainer.innerHTML = tableBuild(game);
+    soloStats.style.display = "none";
+    multiStats.style.display = "block";
+    labelTotal.style.display = "none";
+    labelTotalMulti.style.display = "block";
+    myChart.destroy();
+    myChart = displayChart(chartWinMulti.value, chartLossMulti.value);
+    // tableContainer.innerHTML = tableBuild(game);
 });
 
 btnSolo.addEventListener("click", () => {
-  multiStats.style.display = "none";
-  soloStats.style.display = "block";
-  labelTotal.style.display = "block";
-  labelTotalMulti.style.display = "none";
-  myChart.destroy();
-  myChart = displayChart(chartWin.value, chartLoss.value);
+    multiStats.style.display = "none";
+    soloStats.style.display = "block";
+    labelTotal.style.display = "block";
+    labelTotalMulti.style.display = "none";
+    myChart.destroy();
+    myChart = displayChart(chartWin.value, chartLoss.value);
 });
 
 function changeStats(win, loss) {
-  const data = {
-    labels: [win + " Wins", loss + " Losses"],
-    datasets: [
-      {
-        label: "My First Dataset",
-        data: [win, loss],
-        backgroundColor: ["rgb(157, 177, 113)", "rgb(176, 81, 75)"],
-        hoverOffset: 4,
-      },
-    ],
-  };
-  return data;
+    const darkModeFromStorage = localStorage.getItem("darkmode");
+    let correctRGB = "rgb(0, 128, 0)";
+    let outRGB = "rgb(211, 211, 6)";
+
+    if (darkModeFromStorage) {
+        correctRGB = "rgb(0, 100, 0)";
+        outRGB = "rgb(139, 139, 2)";
+    }
+
+    const data = {
+        labels: [win + " Wins", loss + " Losses"],
+        datasets: [
+            {
+                label: "My First Dataset",
+                data: [win, loss],
+                backgroundColor: [correctRGB, outRGB],
+                hoverOffset: 4,
+            },
+        ],
+    };
+    return data;
 }
 function updateConfig(win, loss) {
-  const config = {
-    type: "doughnut",
-    data: changeStats(win, loss),
-    options: {
-      responsive: true,
-    },
-  };
-  return config;
+    const config = {
+        type: "doughnut",
+        data: changeStats(win, loss),
+        options: {
+            responsive: true,
+        },
+    };
+    return config;
 }
 function displayChart(win, loss) {
-  const myChart = new Chart(ctx, updateConfig(win, loss));
-  return myChart;
+    const myChart = new Chart(ctx, updateConfig(win, loss));
+    return myChart;
 }
