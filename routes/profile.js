@@ -113,7 +113,7 @@ router.get("/", autheniticateMiddleware, async (req, res, next) => {
     //total
     userProfile.solo.total.all = i + 1;
     e.win ? (userProfile.solo.total.win += 1) : (userProfile.solo.total.loss += 1);
-    e.guesses != 0 && (userProfile.solo.total.avrg += parseFloat((e.guesses / soloGames.length).toFixed(2))); //toFixed rounds to 0.01 but returns string
+    userProfile.solo.total.avrg += e.guesses;
 
     //w4
     e.letterCount == 4 && (userProfile.solo.w4.all += 1);
@@ -141,6 +141,10 @@ router.get("/", autheniticateMiddleware, async (req, res, next) => {
     e.letterCount == 8 && (userProfile.solo.w8.avrg += e.guesses); //need to divide later on
   });
 
+  userProfile.solo.total.avrg != 0 &&
+      (userProfile.solo.total.avrg = parseFloat(
+          (userProfile.solo.total.avrg / userProfile.solo.total.all).toFixed(2)
+      ));
   userProfile.solo.w4.avrg != 0 && (userProfile.solo.w4.avrg = parseFloat((userProfile.solo.w4.avrg / userProfile.solo.w4.all).toFixed(2))); //toFixed rounds to 0.01 but returns string
   userProfile.solo.w5.avrg != 0 && (userProfile.solo.w5.avrg = parseFloat((userProfile.solo.w5.avrg / userProfile.solo.w5.all).toFixed(2)));
   userProfile.solo.w6.avrg != 0 && (userProfile.solo.w6.avrg = parseFloat((userProfile.solo.w6.avrg / userProfile.solo.w6.all).toFixed(2)));
