@@ -221,6 +221,7 @@ socket.on("word-guessed-waiting", () => {
 socket.on("match-result", (data) => {
     const { secretWord, ...matchResult } = data;
     displayResult(secretWord, matchResult);
+    socket.emit('reset-state')
 });
 
 socket.on("unable-to-match", (data) => {

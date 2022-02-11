@@ -430,6 +430,10 @@ const registerWordleHandlers = (io, socket) => {
         resetMatchState();
     });
 
+    socket.on("reset-state", () => {
+        resetMatchState();
+    })
+
     socket.on("disconnect", () => {
         if (session.user) {
             io.connectedUsers = io.connectedUsers.filter(
