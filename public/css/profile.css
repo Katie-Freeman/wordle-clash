@@ -1,5 +1,9 @@
 @import url("colors.css");
 
+body {
+  color: var(--color-font);
+}
+
 #profileWrap {
   display: block;
   max-width: 800px;
@@ -24,25 +28,32 @@
   font-weight: bolder;
 }
 
-#statsTable {
+.statsTable {
   margin: auto;
   text-align: left;
 }
-#statsTable tr {
+.statsTable tr {
   height: 30px;
 }
-#statsTable td {
+.statsTable td {
   width: 40px;
 }
-#statsTable td:first-child {
+.statsTable td:first-child {
   width: 140px;
   text-align: right;
   padding-right: 20px;
   /* background-color: black; */
 }
 
-#statsTable td:nth-child(2) {
-  color: var(--color-correct);
+.statsTable td:nth-child(2) {
+  color: firebrick;
+}
+.statsTable tr:first-child td:first-child {
+  padding: 0;
+  text-align: left;
+  font-weight: 600;
+  font-size: 20px;
+  color: firebrick;
 }
 
 #statGraph {
@@ -57,13 +68,34 @@
   margin-top: 140px;
 }
 
-#gamePlayed {
+.gamePlayed {
   font-size: 28px;
-  color: var(--color-correct);
-} /* #statsTable tr:first-child td:nth-child(2) {
-  color: inherit;
-} */
+  color: firebrick;
+}
 
-#mychart {
-  background-color: var(--color-highlight);
+#gameSelector {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+}
+#btnSolo,
+#btnMulti {
+  color: brown;
+  cursor: pointer;
+}
+#btnSolo:hover,
+#btnMulti:hover {
+  text-decoration: underline;
+}
+
+#multiStats {
+  display: none;
+}
+
+#labelTotalMulti {
+  display: none;
+  position: absolute;
+  width: 100%;
+  margin-top: 140px;
 }

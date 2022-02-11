@@ -24,51 +24,35 @@ router.post("/adduser", (req, res) => {
 });
 
 router.post("/game-multi", async (req, res, next) => {
-  const name1 = req.body.testDbGameUser1;
+  const name1 = parseInt(req.body.testDbGameUser1);
   const attempts1 = parseInt(req.body.testDbGameAttemptsUser1);
-  const won1 = !!req.body.testDbWon1;
-  const name2 = req.body.testDbGameUser2;
+  const win = req.body.testDbWin;
+  const name2 = parseInt(req.body.testDbGameUser2);
   const attempts2 = parseInt(req.body.testDbGameAttemptsUser2);
-  const won2 = !!req.body.testDbWon2;
   const NumberOfWords = parseInt(req.body.NumberOfWords);
 
   console.log(name1);
   console.log(attempts1);
-  console.log(won1);
+  console.log(win);
   console.log(name2);
   console.log(attempts2);
-  console.log(won2);
   console.log(NumberOfWords);
 
   console.log(req.body);
 
-  let gameR = models.GameRoom.build({
-    letters: NumberOfWords,
-  });
-  let savedGame = await gameR.save();
-
-  console.log(savedGame.id);
-
-  let gameUser1 = models.GameState.build({
-    gr_id: savedGame.id,
-    user_name: name1,
-    win: won1,
-    attempts: attempts1,
+  let MuchStats = models.MatchStat.build({
+    users: [
+      { userId: name1, guessCount: attempts1 },
+      { userId: name2, guessCount: attempts2 },
+    ],
+    winner: win,
+    letterCount: NumberOfWords,
   });
 
-  let gameUser2 = models.GameState.build({
-    gr_id: savedGame.id,
-    user_name: name2,
-    win: won2,
-    attempts: attempts2,
-  });
-
-  let user1 = await gameUser1.save();
-  let user2 = await gameUser2.save();
+  let Much = await MuchStats.save();
 
   console.log("_________________________");
-  console.log(user1);
-  console.log(user2);
+  console.log(Much);
 
   res.redirect("/dbtest");
 });

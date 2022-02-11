@@ -1,3 +1,4 @@
 /node_modules
 .secret
 sessions
+config.json

@@ -39,21 +39,21 @@
         <label for="">words</label>
         <button id="btnTestAddGame">Add Single Game</button>
 
+
     </form>
     <br>
     <h4>multiplayer game :</h4>
     <form method="POST" action="/dbtest/game-multi">
-        <input type="text" placeholder="User1" name="testDbGameUser1">
+        <input type="number" placeholder="User_id 1" name="testDbGameUser1">
         <label for="">attempts: </label>
         <input type="number" placeholder="# of Attempts User1" name="testDbGameAttemptsUser1">
-        <input type="checkbox" placeholder="Winner Boolean" name="testDbWon1">
-        <label for="">winner user1</label>
+
         <br>
-        <input type="text" placeholder="User2" name="testDbGameUser2">
+        <input type="number" placeholder="User_id 2" name="testDbGameUser2">
         <label for="">attempts: </label>
         <input type="number" placeholder=" # of Attempts User2" name="testDbGameAttemptsUser2">
-        <input type="checkbox" placeholder="Winner Boolean" name="testDbWon2">
-        <label for="">winner user2</label>
+        <label for="">winner:</label>
+        <input type="numbers" placeholder="Winner ID" name="testDbWin">
 
         <select name="NumberOfWords">
             <option value="4">4</option>
