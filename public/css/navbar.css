@@ -45,7 +45,7 @@
 }
 
 #welcomeUser {
-    color: var(--color-correct);
+    color: var(--color-font);
     background: var(--color-bg);
     padding-top: 14px;
     padding-bottom: 6px;

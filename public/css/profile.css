@@ -46,14 +46,14 @@ body {
 }
 
 .statsTable td:nth-child(2) {
-  color: firebrick;
+  color: var(--color-out);
 }
 .statsTable tr:first-child td:first-child {
   padding: 0;
   text-align: left;
   font-weight: 600;
   font-size: 20px;
-  color: firebrick;
+  color: var(--color-out);
 }
 
 #statGraph {
@@ -70,7 +70,7 @@ body {
 
 .gamePlayed {
   font-size: 28px;
-  color: firebrick;
+  color: var(--color-out);
 }
 
 #gameSelector {
@@ -81,7 +81,7 @@ body {
 }
 #btnSolo,
 #btnMulti {
-  color: brown;
+  color: var(--color-out);
   cursor: pointer;
 }
 #btnSolo:hover,
