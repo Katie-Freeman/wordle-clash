@@ -7,7 +7,11 @@
 </head>
 <body>
    {{>navbar}}
+
 <div class="container instructions">
+    <div class="move-right">
+        {{>settings}}
+    </div>
     <h3>HOW TO PLAY</h3>
     <p>Guess the WORDLE in 6 tries.</p>
     <p>All the game action takes place from the home page. Users may type letters using a physical keyboard while the game screen is selected (pressing the Enter key submits the guess), or by utilizing the custom keyboard along the bottom of the window. After the guess is submitted, the game will color code each letter in the guess:</p>
@@ -44,6 +48,7 @@
         <p>The keyboard along the bottom of the screen will also indicate which letters have been used and the appropriate status.</p>
         <br>
         <p>Users without an account can experience the solo, single-player version. To enable match-play (up to 2 players at this time), and to save game stats, the user must log in or create an account.</p>
+
 </div>
 
 {{>footer}}

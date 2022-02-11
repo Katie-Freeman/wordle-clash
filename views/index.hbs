@@ -19,21 +19,7 @@
             <i id="newGameLink">
                 New Game
             </i>
-            <div class="dropdown">
-                <i id="settingsLink" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    Settings
-                </i>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="settingsLink">
-                    <div id="darkmode" class="dropdown-item">
-                        <input type="checkbox" class="checkbox" id="checkbox" onchange="toggleDarkMode()">
-                        <label for="checkbox" class="label">
-                            <i class="fas fa-moon" value="dark"></i>
-                            <i class="fas fa-sun" value="light"></i>
-                            <div class="ball"></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
+            {{>settings}}
         </div>
         <div id="guesses">
             {{!-- correct, wrong-placement, not-in-word --}}
