@@ -1,5 +1,9 @@
 @import url("colors.css");
 
+body {
+  color: var(--color-font);
+}
+
 #profileWrap {
   display: block;
   max-width: 800px;
