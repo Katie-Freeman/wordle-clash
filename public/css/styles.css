@@ -37,6 +37,16 @@ body {
     opacity: 0;
 }
 
+.game-link {
+    text-decoration: none;
+    color: var(--color-font);
+}
+
+.game-link:hover {
+    text-decoration: none;
+    color: var(--color-highlight);
+}
+
 #darkmode {
     position: relative;
     left: 60px;
