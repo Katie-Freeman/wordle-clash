@@ -158,6 +158,10 @@
     column-gap: 4px;
 }
 
+.guess-row.instructions {
+    justify-content: flex-start;
+}
+
 .guess-row.active {
     background-color: var(--color-highlight);
 }

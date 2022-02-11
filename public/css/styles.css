@@ -12,6 +12,10 @@ body {
     background-color: var(--color-bg);
 }
 
+.container.instructions {
+    height: calc(var(--vh, 1vh) * 100 - 135px);
+}
+
 #footer {
     text-align: center;
     margin-top: 20px;
