@@ -24,6 +24,11 @@ body {
     margin: 0 auto;
 }
 
+.move-right {
+    position: absolute;
+    right: 3em;
+}
+
 .checkbox {
     opacity: 0;
 }
