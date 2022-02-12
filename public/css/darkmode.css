@@ -3,6 +3,6 @@
   --color-secondary: rgb(119, 118, 118);
   --color-highlight: darkgray;
   --color-font: white;
-  --color-correct: darkgreen;
-  --color-out: rgb(139, 139, 2);
+  /* --color-correct: darkgreen;
+  --color-out: rgb(139, 139, 2); */
 }

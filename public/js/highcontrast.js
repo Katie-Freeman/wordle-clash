@@ -1,16 +1,16 @@
 const hCCheckbox = document.getElementById("hc-checkbox");
 
 const toggleHighContrast = () => {
-  const isChecked = hCCheckbox.checked;
+  const hCIsChecked = hCCheckbox.checked;
 
-  localStorage.setItem("highcontrast", isChecked ? "true" : "");
+  localStorage.setItem("highcontrast", hCIsChecked ? "true" : "");
 
   const hCLink = document.createElement("link");
 
   hCLink.type = "text/css";
   hCLink.rel = "stylesheet";
   hCLink.href = "/css/highcontrast.css";
-  if (isChecked) {
+  if (hCIsChecked) {
     document.head.appendChild(hCLink);
   } else {
     const sheet = document.querySelector("link[href='/css/highcontrast.css']");
