@@ -1,5 +1,6 @@
 const checkbox = document.getElementById("checkbox");
 
+
 const toggleDarkMode = () => {
     const isChecked = checkbox.checked;
 

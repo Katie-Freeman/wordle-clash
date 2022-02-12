@@ -33,7 +33,7 @@ body {
     right: 3em;
 }
 
-.checkbox {
+.checkbox, .hc-checkbox {
     opacity: 0;
 }
 
@@ -47,13 +47,13 @@ body {
     color: var(--color-highlight);
 }
 
-#darkmode {
+#darkmode, #highcontrast {
     position: relative;
     left: 60px;
     bottom: 5px;
 }
 
-.label {
+.label, .hCLabel {
     background-color: #111;
     border-radius: 50px;
     cursor: pointer;
@@ -83,19 +83,7 @@ body {
     transform: translateX(21px);
 }
 
-.label .HCBall {
-    background-color: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    height: 15px;
-    width: 15px;
-    transform: translateX(0px);
-    transition: transform 0.2s linear;
-}
-
-.hc-checkbox:checked + .label .HCBall {
+.hc-checkbox:checked + .label .ball {
     transform: translateX(21px);
 }
 
