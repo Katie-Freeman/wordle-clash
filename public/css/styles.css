@@ -83,6 +83,22 @@ body {
     transform: translateX(21px);
 }
 
+.label .HCBall {
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    height: 15px;
+    width: 15px;
+    transform: translateX(0px);
+    transition: transform 0.2s linear;
+}
+
+.hc-checkbox:checked + .label .HCBall {
+    transform: translateX(21px);
+}
+
 .fa-moon {
     color: #f1c40f;
 }
