@@ -34,13 +34,14 @@ btnSolo.addEventListener("click", () => {
 });
 
 function changeStats(win, loss) {
-    const darkModeFromStorage = localStorage.getItem("darkmode");
+    const highContrastFromStorage = localStorage.getItem
+    ("highcontrast");
     let correctRGB = "rgb(0, 128, 0)";
     let outRGB = "rgb(211, 211, 6)";
 
-    if (darkModeFromStorage) {
-        correctRGB = "rgb(0, 100, 0)";
-        outRGB = "rgb(139, 139, 2)";
+    if (highContrastFromStorage) {
+        correctRGB = "rgb(0, 114, 187)";
+        outRGB = "rgb(254, 95, 85)";
     }
 
     const data = {
