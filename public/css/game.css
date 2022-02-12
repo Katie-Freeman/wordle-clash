@@ -259,8 +259,16 @@
     background-color: var(--color-correct);
 }
 
+.correct.highContrast {
+    background-color: #0072BB;
+}
+
 .wrong-placement {
     background-color: var(--color-out);
+}
+
+.wrong-placement.highContrast {
+    background-color: #FE5F55;
 }
 
 .not-in-word {
