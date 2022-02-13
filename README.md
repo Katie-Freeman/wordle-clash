@@ -43,6 +43,14 @@ On match-play, the server waits until both players have completed (by either cor
 
 https://wordle-clash.herokuapp.com/
 
+## User Guess and Invitation To Match (Browser light mode and dark mode):
+![](desktop-guess-light.gif)
+![](desktop-invite-dark.gif)
+
+## User Guess and Invitation To Match (Mobile light mode and dark mode):
+![](mobile-guess-dark.gif)
+![](mobile-invite-light.gif)
+
 ## Featured programs:
 
 HTML, CSS, Bootstrap, JavaScript, Node.js, Socket.IO, Handlebars
