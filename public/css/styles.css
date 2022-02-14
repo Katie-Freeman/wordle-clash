@@ -47,10 +47,16 @@ body {
     color: var(--color-highlight);
 }
 
-#darkmode, #highcontrast {
+#darkmode {
+    left: 60px;
+    bottom: 5px;
+}
+
+#highcontrast {
     position: relative;
     left: 60px;
     bottom: 5px;
+    color: black;
 }
 
 .label, .hCLabel {
@@ -89,8 +95,18 @@ body {
 
 .fa-moon {
     color: #f1c40f;
+
 }
 
 .fa-sun {
     color: #f39c12;
+
+}
+
+#HC-label {
+    margin: 20px;
+    font-family: "Varela Round", sans-serif;
+    /* display: flex;
+    flex-wrap: wrap; */
+    color: black;
 }

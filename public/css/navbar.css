@@ -1,4 +1,5 @@
 @import url("colors.css");
+
 .form-control {
     box-shadow: none;
     font-weight: normal;
@@ -29,7 +30,7 @@
     display: inline-block;
 }
 .navbar .nav li {
-    position: relative;
+    /* position: relative; */
 }
 .navbar .nav li a {
     color: var(--color-secondary);
@@ -41,7 +42,7 @@
 }
 
 .navbar-toggle {
-    margin-left: auto;
+    margin: auto;
 }
 
 #welcomeUser {
@@ -53,6 +54,10 @@
     border: none;
     font-size: 16px;
     text-align: center;
+}
+
+#darkmode {
+    margin: auto
 }
 
 .navbar .nav .btn-primary,
@@ -103,7 +108,7 @@
 .navbar .nav .dropdown-menu li a,
 .navbar .nav .dropdown-menu li a:hover,
 .navbar .nav .dropdown-menu li a:focus {
-    padding: 8px 20px;
+    /* padding: 8px 20px; */
     line-height: normal;
 }
 .navbar .navbar-form {
@@ -181,6 +186,9 @@
 }
 
 @media (min-width: 767px) {
+    .navbar {
+        border-radius: 4px !important;
+    }
     .navbar-header {
         margin-right: auto;
     }
