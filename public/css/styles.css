@@ -103,6 +103,10 @@ body {
 
 }
 
+.label.on-off {
+    font-size: 8px;
+}
+
 #HC-label {
     margin: 20px;
     font-family: "Varela Round", sans-serif;
