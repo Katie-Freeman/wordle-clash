@@ -105,7 +105,9 @@ body {
 
 .label.on-off {
     font-size: 8px;
+    font-family: "Varela Round", sans-serif;
 }
+
 
 #HC-label {
     margin: 20px;
