@@ -91,6 +91,7 @@
     min-width: 120px;
     margin-top: 8px;
     margin-bottom: 8px;
+    margin-left: 40px;
 }
 .navbar ul.nav li.open > a.get-started-btn {
     color: var(--color-bg);

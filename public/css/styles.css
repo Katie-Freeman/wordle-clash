@@ -48,8 +48,8 @@ body {
 }
 
 #darkmode {
-    left: 60px;
-    bottom: 5px;
+    margin-bottom: 10px;
+    margin-left: 65px;
 }
 
 #highcontrast {
@@ -115,4 +115,5 @@ body {
     /* display: flex;
     flex-wrap: wrap; */
     color: black;
+    font-size: 12px;
 }
